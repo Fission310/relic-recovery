@@ -29,3 +29,6 @@ Auton<Alliance><Target1><Target2><Target...>.java
 
 ### Teleop
 The main teleop file should be named ```TeleopMain.java```. Any other variations of the main teleop should be named ```Teleop<Description>.java```.
+
+### Testing/Prototyping
+ALL test or prototyping OpMode files should be named ```Test<Description>.java```.
