@@ -8,7 +8,7 @@ With help from our programmers, Joe Suzuki and Matthew Chan
 
 | File                    | Contents or Auton Routine                              |
 | ----------------------- | ------------------------------------------------------ |
-|                         | 
+| TestAcquirerPrototype   | OpMode for Saahir's prototype acquirer                 |
 
 **Note:** \* denotes work in progress or incomplete
 
