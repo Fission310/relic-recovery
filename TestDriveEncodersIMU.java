@@ -99,7 +99,7 @@ public class TestDriveEncodersIMU extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.4;
-    static final double     TURN_SPEED              = 0.5;
+    static final double     TURN_SPEED              = 0.3;
     static final double     PCONSTANT               = 0.1;
 
     @Override
@@ -162,7 +162,10 @@ public class TestDriveEncodersIMU extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        turn(DRIVE_SPEED,  90, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(1000);
+        turn(TURN_SPEED,  -90, 6.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(1000);
+        encoderDrive(DRIVE_SPEED,  24,  24, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
         sleep(5000);     // pause for servos to move
 
@@ -185,6 +188,8 @@ public class TestDriveEncodersIMU extends LinearOpMode {
         int newRightTarget;
         double acc = 0;
         double t = 0;
+
+        double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -210,7 +215,7 @@ public class TestDriveEncodersIMU extends LinearOpMode {
 
                 double gyroAngle = angles.firstAngle;
 
-                double p = gyroAngle*PCONSTANT;
+                double p = (gyroAngle-currentAngle)*PCONSTANT;
 
                 leftFront.setPower(Math.abs(speed) + p);
                 rightFront.setPower(Math.abs(speed) - p);
@@ -258,8 +263,13 @@ public class TestDriveEncodersIMU extends LinearOpMode {
             // sleep(1000);
 
             // Turn off RUN_TO_POSITION
+            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            leftFront.setPower(0);
+            rightFront.setPower(0);
         }
     }
 
@@ -270,12 +280,14 @@ public class TestDriveEncodersIMU extends LinearOpMode {
 
             runtime.reset();
 
-            while (Math.abs(angleToTurn) > 3 && runtime.seconds() < timeoutS) {
+            while (opModeIsActive() && (Math.abs(angleToTurn) > 0.5 || runtime.seconds() < timeoutS)) {
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 angleToTurn = angle - angles.firstAngle;
 
                 leftFront.setPower(-Math.signum(angleToTurn)*speed);
                 rightFront.setPower(Math.signum(angleToTurn)*speed);
+                leftBack.setPower(-Math.signum(angleToTurn)*speed);
+                rightBack.setPower(Math.signum(angleToTurn)*speed);
 
                 telemetry.addData("Heading: ", "%f", angleToTurn);
                 telemetry.update();
@@ -283,6 +295,8 @@ public class TestDriveEncodersIMU extends LinearOpMode {
 
             leftFront.setPower(0);
             rightFront.setPower(0);
+            leftBack.setPower(0);
+            rightBack.setPower(0);
 
             telemetry.addData("Angle: ", "%f", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
             telemetry.update();
