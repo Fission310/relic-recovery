@@ -6,9 +6,18 @@ With help from our programmers, Joe Suzuki and Matthew Chan
 
 ## File Index
 
-| File                    | Contents or Auton Routine                              |
-| ----------------------- | ------------------------------------------------------ |
-| TestAcquirerPrototype   | OpMode for Saahir's prototype acquirer                 |
+| File                        | Contents or Auton Routine                              |
+| --------------------------- | ------------------------------------------------------ |
+| AutonBlueJewelCryptobox1    | Blue: Jewel -> score in cryptobox                      |
+| ConceptVuMarkIdentification | Test OpMode for sensing VuMarks                        |
+| ConceptVuforiaFollowTarget  | Autonomous OpMode that makes a robot follow a target   |
+| CraigLauncherTeleop         | Last year's teleop code; retained for demo purposes    |
+| HardwareMain                | Contains current robot's hardware map                  |
+| SensorBNO055IMU             | Sample OpMode to test REV Expansion Hub IMU            |
+| SensorBNO055IMUCalibration  | Sample OpMode to test REV Expansion Hub IMU            |
+| TeleopMain                  | Main teleop code                                       |
+| TestAcquirerPrototype       | OpMode for Saahir's prototype acquirer                 |
+| TestDriveEncodersIMU        | Test OpMode to drive using encoders and IMU            |
 
 **Note:** \* denotes work in progress or incomplete
 
