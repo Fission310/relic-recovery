@@ -78,6 +78,7 @@ public class HardwareMain {
     BNO055IMU imu;
 
     ColorSensor sensorColor;
+    Servo arm;
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final double MAX_POS = 1.0;     // Maximum rotational position
@@ -87,7 +88,7 @@ public class HardwareMain {
     Orientation angles;
     Acceleration gravity;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 280 ;    // NeverRest 20
+    static final double     COUNTS_PER_MOTOR_REV    = 280 ;    // NeverRest 40
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         =
@@ -95,6 +96,9 @@ public class HardwareMain {
     static final double     DRIVE_SPEED             = 0.4;
     static final double     TURN_SPEED              = 0.3;
     static final double     PCONSTANT               = 0.1;
+
+    static final double BLUE = 256;
+    static final double RED = 256;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -141,6 +145,11 @@ public class HardwareMain {
 
         slides.setPower(0);
 
+        topLeft.setPosition(MAX_POS);
+        topRight.setPosition(MIN_POS);
+        bottomLeft.setPosition(MAX_POS);
+        bottomRight.setPosition(MIN_POS);
+
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -155,7 +164,10 @@ public class HardwareMain {
         imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        //sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
+        arm = hwMap.servo.get("arm");
+        sensorColor = hwMap.get(ColorSensor.class, "color_sensor");
+
+        arm.setPosition(0);
     }
 
     /*
@@ -285,5 +297,64 @@ public class HardwareMain {
         opMode.telemetry.addData("Angle: ", "%f", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
         opMode.telemetry.update();
     }
+
+
+    /*
+    Assumes the color sensor faces the FRONT of the bot.
+    If reversed, negate drive inches.
+    Returns the number of inches moved, with respect to the original position.
+     */
+    public int jewel(LinearOpMode opMode, boolean isAllianceRed) {
+        if (opMode.opModeIsActive()) {
+            arm.setPosition(1);
+            opMode.sleep(1000);
+        }
+        if (opMode.opModeIsActive()) {
+            int inchesToDrive = 3;
+            if (sensorColor.blue() > BLUE) {
+                // blue detected
+                if (isAllianceRed) {
+                    // drive forward
+                    encoderDrive(opMode, DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    return inchesToDrive;
+                } else {
+                    encoderDrive(opMode, DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
+                    return -inchesToDrive;
+                }
+            } else if (sensorColor.red() > RED) {
+                if (isAllianceRed) {
+                    encoderDrive(opMode, DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
+                    return inchesToDrive;
+                } else {
+                    encoderDrive(opMode, DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    return -inchesToDrive;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+
+    public void clamp(LinearOpMode opMode) {
+        if (opMode.opModeIsActive()) {
+            double avg = (MAX_POS-MAX_POS) / 2;
+            topLeft.setPosition(avg);
+            topRight.setPosition(avg);
+            bottomLeft.setPosition(avg);
+            bottomRight.setPosition(avg);
+        }
+    }
+
+
+    public void release(LinearOpMode opMode) {
+        if (opMode.opModeIsActive()) {
+            topLeft.setPosition(MAX_POS);
+            topRight.setPosition(MIN_POS);
+            bottomLeft.setPosition(MAX_POS);
+            bottomRight.setPosition(MIN_POS);
+        }
+    }
+
  }
 

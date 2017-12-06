@@ -110,22 +110,29 @@ public class AutonBlueJewelCryptobox1 extends LinearOpMode {
         // Wait until we're told to go
         waitForStart();
 
+        // Clamp onto glyph and init top servos
+        robot.clamp(this);
+        sleep(1000);
+
         // Start the logging of measured acceleration
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(1000);
-        robot.turn(this, HardwareMain.TURN_SPEED,  -90, 6.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(1000);
-        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  24,  24, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        int jewelMovement;
 
-        sleep(5000);     // pause for servos to move
+        jewelMovement = robot.jewel(this, false);
+        sleep(1000);
+        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  48 + jewelMovement,  48 + jewelMovement, 5.0);
+        sleep(1000);
+        robot.turn(this, HardwareMain.TURN_SPEED,  -90, 2.0);
+        sleep(1000);
+        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  24,  24, 5.0);
+
+        sleep(1000);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-
 
 }

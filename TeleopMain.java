@@ -143,5 +143,11 @@ public class TeleopMain extends OpMode {
         } else {
             robot.slides.setPower(0);
         }
+
+        if (gamepad1.x || gamepad2.x) {
+            robot.arm.setPosition(0);
+        } else if (gamepad1.y || gamepad2.y) {
+            robot.arm.setPosition(1);
+        }
     }
 }
