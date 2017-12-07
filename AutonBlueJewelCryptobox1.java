@@ -121,13 +121,13 @@ public class AutonBlueJewelCryptobox1 extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         int jewelMovement;
 
-        jewelMovement = robot.jewel(this, false);
-        sleep(1000);
-        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  48 + jewelMovement,  48 + jewelMovement, 5.0);
-        sleep(1000);
-        robot.turn(this, HardwareMain.TURN_SPEED,  -90, 2.0);
-        sleep(1000);
-        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  24,  24, 5.0);
+        //jewelMovement = robot.jewel(this, false);
+        //sleep(1000);
+//        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  48 + jewelMovement,  48 + jewelMovement, 5.0);
+//        sleep(1000);
+//        robot.turn(this, HardwareMain.TURN_SPEED,  -90, 2.0);
+//        sleep(1000);
+//        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  24,  24, 5.0);
 
         sleep(1000);
 

@@ -81,14 +81,14 @@ public class HardwareMain {
     Servo arm;
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final double MAX_POS = 1.0;     // Maximum rotational position
-    static final double MIN_POS = 0.0;     // Minimum rotational position
+    static final double MAX_POS = 0.7;     // Maximum rotational position
+    static final double MIN_POS = 0.3;     // Minimum rotational position
 
     // State used for updating opMode.telemetry
     Orientation angles;
     Acceleration gravity;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 280 ;    // NeverRest 40
+    static final double     COUNTS_PER_MOTOR_REV    = 560 ;    // NeverRest 40
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         =
@@ -97,8 +97,8 @@ public class HardwareMain {
     static final double     TURN_SPEED              = 0.3;
     static final double     PCONSTANT               = 0.1;
 
-    static final double BLUE = 256;
-    static final double RED = 256;
+    static final double BLUE = 120;
+    static final double RED = 120;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -167,7 +167,7 @@ public class HardwareMain {
         arm = hwMap.servo.get("arm");
         sensorColor = hwMap.get(ColorSensor.class, "color_sensor");
 
-        arm.setPosition(0);
+        arm.setPosition(1);
     }
 
     /*
@@ -306,8 +306,13 @@ public class HardwareMain {
      */
     public int jewel(LinearOpMode opMode, boolean isAllianceRed) {
         if (opMode.opModeIsActive()) {
-            arm.setPosition(1);
+            arm.setPosition(0.1);
             opMode.sleep(1000);
+            opMode.telemetry.addData("Alpha", sensorColor.alpha());
+            opMode.telemetry.addData("Red  ", sensorColor.red());
+            opMode.telemetry.addData("Green", sensorColor.green());
+            opMode.telemetry.addData("Blue ", sensorColor.blue());
+            opMode.sleep(1500);
         }
         if (opMode.opModeIsActive()) {
             int inchesToDrive = 3;
@@ -338,11 +343,10 @@ public class HardwareMain {
 
     public void clamp(LinearOpMode opMode) {
         if (opMode.opModeIsActive()) {
-            double avg = (MAX_POS-MAX_POS) / 2;
-            topLeft.setPosition(avg);
-            topRight.setPosition(avg);
-            bottomLeft.setPosition(avg);
-            bottomRight.setPosition(avg);
+            topLeft.setPosition(MAX_POS / 3);
+            topRight.setPosition((1 - MIN_POS) * 2 / 3);
+            bottomLeft.setPosition(MAX_POS / 3);
+            bottomRight.setPosition((1 - MIN_POS) * 2 / 3);
         }
     }
 
