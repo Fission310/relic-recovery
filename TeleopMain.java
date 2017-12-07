@@ -145,7 +145,7 @@ public class TeleopMain extends OpMode {
         }
 
         if (gamepad1.x || gamepad2.x) {
-            robot.arm.setPosition(0);
+            robot.arm.setPosition(0.1);
         } else if (gamepad1.y || gamepad2.y) {
             robot.arm.setPosition(1);
         }

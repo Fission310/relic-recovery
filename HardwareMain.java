@@ -45,6 +45,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /** TODO: UPDATE
  * This class can be used to define all the specific hardware for a single robot.
@@ -88,7 +90,7 @@ public class HardwareMain {
     Orientation angles;
     Acceleration gravity;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 560 ;    // NeverRest 40
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // NeverRest 40
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         =
@@ -163,6 +165,9 @@ public class HardwareMain {
         // and named "imu".
         imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+
+        // Start the logging of measured acceleration
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         arm = hwMap.servo.get("arm");
         sensorColor = hwMap.get(ColorSensor.class, "color_sensor");
@@ -321,22 +326,27 @@ public class HardwareMain {
                 if (isAllianceRed) {
                     // drive forward
                     encoderDrive(opMode, DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    arm.setPosition(1);
                     return inchesToDrive;
                 } else {
                     encoderDrive(opMode, DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
+                    arm.setPosition(1);
                     return -inchesToDrive;
                 }
             } else if (sensorColor.red() > RED) {
                 if (isAllianceRed) {
                     encoderDrive(opMode, DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
+                    arm.setPosition(1);
                     return inchesToDrive;
                 } else {
                     encoderDrive(opMode, DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    arm.setPosition(1);
                     return -inchesToDrive;
                 }
             }
         }
 
+        arm.setPosition(0.1);
         return 0;
     }
 

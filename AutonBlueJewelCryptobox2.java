@@ -29,20 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
@@ -73,8 +64,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auton: Blue Jewel Cryptobox Left Stone", group="Auton")
-public class AutonBlueJewelCryptobox1 extends LinearOpMode {
+@Autonomous(name="Auton: Blue Jewel Cryptobox Right Stone", group="Auton")
+public class AutonBlueJewelCryptobox2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -120,9 +111,9 @@ public class AutonBlueJewelCryptobox1 extends LinearOpMode {
 
         //jewelMovement = robot.jewel(this, false);
         //sleep(1000);
-//        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  48 + jewelMovement,  48 + jewelMovement, 5.0);
+//        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  -48 + jewelMovement,  -48 + jewelMovement, 5.0);
 //        sleep(1000);
-//        robot.turn(this, HardwareMain.TURN_SPEED,  -90, 2.0);
+//        robot.turn(this, HardwareMain.TURN_SPEED,  90, 2.0);
 //        sleep(1000);
 //        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  24,  24, 5.0);
 
