@@ -30,12 +30,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -64,11 +63,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auton: Blue Jewel Cryptobox Right Stone", group="Auton")
-public class AutonBlueJewelCryptobox2 extends LinearOpMode {
-
-    /* Declare OpMode members. */
-    private ElapsedTime     runtime = new ElapsedTime();
+@Autonomous(name="Auton: Blue Jewel Near Cryptobox @ Left Stone", group="Auton")
+@Disabled
+public class AutonBlueLeftStoneJewelNearBox extends LinearOpMode {
 
     HardwareMain robot = new HardwareMain();
 
@@ -100,10 +97,12 @@ public class AutonBlueJewelCryptobox2 extends LinearOpMode {
 
         // Wait until we're told to go
         waitForStart();
+        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED, 48, 48, 5.0);
+        robot.arm.setPosition(0.1);
 
         // Clamp onto glyph and init top servos
-        robot.clamp(this);
-        sleep(1000);
+        //robot.clamp(this);
+        //sleep(1000);
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
@@ -111,9 +110,9 @@ public class AutonBlueJewelCryptobox2 extends LinearOpMode {
 
         //jewelMovement = robot.jewel(this, false);
         //sleep(1000);
-//        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  -48 + jewelMovement,  -48 + jewelMovement, 5.0);
+//        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  48 + jewelMovement,  48 + jewelMovement, 5.0);
 //        sleep(1000);
-//        robot.turn(this, HardwareMain.TURN_SPEED,  90, 2.0);
+//        robot.turn(this, HardwareMain.TURN_SPEED,  -90, 2.0);
 //        sleep(1000);
 //        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  24,  24, 5.0);
 

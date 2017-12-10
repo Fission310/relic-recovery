@@ -8,7 +8,6 @@ With help from our programmers, Joe Suzuki and Matthew Chan
 
 | File                        | Contents or Auton Routine                              |
 | --------------------------- | ------------------------------------------------------ |
-| AutonBlueJewelCryptobox1    | Blue: Jewel -> score in cryptobox                      |
 | ConceptVuMarkIdentification | Test OpMode for sensing VuMarks                        |
 | ConceptVuforiaFollowTarget  | Autonomous OpMode that makes a robot follow a target   |
 | CraigLauncherTeleop         | Last year's teleop code; retained for demo purposes    |

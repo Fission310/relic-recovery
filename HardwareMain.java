@@ -29,10 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -61,6 +62,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  * Motor channel:  Manipulator drive motor:  "left_arm"
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
+ *
+ * TODO AUTONS:
+ *  - Jewel + Safe zone park for all configurations
+ *    - Blue left/right stone back park
+ *    - Blue left stone forward park
+ *    - Red left/right stone forward park
+ *    - Red right stone back park
+ *  - Jewel + Blue cryptobox score left (random)
+ *  - Jewel + Red cryptobox score left (random)
  */
 public class HardwareMain {
 
@@ -83,8 +93,8 @@ public class HardwareMain {
     Servo arm;
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final double MAX_POS = 0.7;     // Maximum rotational position
-    static final double MIN_POS = 0.3;     // Minimum rotational position
+    static final double MAX_POS = 1.0;     // Maximum rotational position
+    static final double MIN_POS = 0.4;     // Minimum rotational position
 
     // State used for updating opMode.telemetry
     Orientation angles;
@@ -99,8 +109,9 @@ public class HardwareMain {
     static final double     TURN_SPEED              = 0.3;
     static final double     PCONSTANT               = 0.1;
 
-    static final double BLUE = 120;
-    static final double RED = 120;
+    static final double BLUE = 115;
+    static final double RED = 85;
+    final double SCALE_FACTOR = 255;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -170,7 +181,6 @@ public class HardwareMain {
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         arm = hwMap.servo.get("arm");
-        sensorColor = hwMap.get(ColorSensor.class, "color_sensor");
 
         arm.setPosition(1);
     }
@@ -313,33 +323,33 @@ public class HardwareMain {
         if (opMode.opModeIsActive()) {
             arm.setPosition(0.1);
             opMode.sleep(1000);
-            opMode.telemetry.addData("Alpha", sensorColor.alpha());
-            opMode.telemetry.addData("Red  ", sensorColor.red());
-            opMode.telemetry.addData("Green", sensorColor.green());
-            opMode.telemetry.addData("Blue ", sensorColor.blue());
-            opMode.sleep(1500);
         }
         if (opMode.opModeIsActive()) {
-            int inchesToDrive = 3;
-            if (sensorColor.blue() > BLUE) {
+            int inchesToDrive = 5;
+            float hsvValues[] = {0F, 0F, 0F};
+            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                    (int) (sensorColor.green() * SCALE_FACTOR),
+                    (int) (sensorColor.blue() * SCALE_FACTOR),
+                    hsvValues);
+            if (hsvValues[0] > BLUE) {
                 // blue detected
                 if (isAllianceRed) {
                     // drive forward
-                    encoderDrive(opMode, DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    encoderDrive(opMode, DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
                     arm.setPosition(1);
                     return inchesToDrive;
                 } else {
-                    encoderDrive(opMode, DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
+                    encoderDrive(opMode, DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
                     arm.setPosition(1);
                     return -inchesToDrive;
                 }
-            } else if (sensorColor.red() > RED) {
+            } else if (hsvValues[0] < RED) {
                 if (isAllianceRed) {
-                    encoderDrive(opMode, DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
+                    encoderDrive(opMode, DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
                     arm.setPosition(1);
                     return inchesToDrive;
                 } else {
-                    encoderDrive(opMode, DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    encoderDrive(opMode, DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
                     arm.setPosition(1);
                     return -inchesToDrive;
                 }
