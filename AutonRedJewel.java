@@ -55,11 +55,8 @@ public class AutonRedJewel extends LinearOpMode {
         // Wait until we're told to go
         waitForStart();
 
-        robot.sensorColor = hardwareMap.get(ColorSensor.class, "color_sensor");
-
         // Clamp onto glyph and init top servos
         //robot.clamp(this);
-        sleep(20000);
 
         robot.jewel(this, true);
 

@@ -29,17 +29,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -50,11 +44,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
  * the identity of Vuforia VuMarks encountered on the field. The code is structured as
- * a LinearOpMode. It shares much structure with {@link org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation}; we do not here
+ * a LinearOpMode. It shares much structure with {@link ConceptVuforiaNavigation}; we do not here
  * duplicate the core Vuforia documentation found there, but rather instead focus on the
  * differences between the use of Vuforia for navigation vs VuMark identification.
  *
- * @see org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation
+ * @see ConceptVuforiaNavigation
  * @see VuforiaLocalizer
  * @see VuforiaTrackableDefaultListener
  * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
@@ -67,11 +61,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
-public class ConceptVuMarkIdentification extends LinearOpMode {
+public class AutonVuMark extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
-    OpenGLMatrix lastLocation = null;
+    HardwareMain robot = new HardwareMain();
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -123,6 +117,8 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
+        robot.init(hardwareMap);
+
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
         waitForStart();
@@ -146,9 +142,21 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
                 telemetry.addData("VuMark", "not visible");
                 telemetry.update();
 
+                robot.encoderDrive(this, HardwareMain.DRIVE_SPEED, 1, 1, 0.75);
                 vuMark = RelicRecoveryVuMark.from(relicTemplate);
             }
             telemetry.addData("VuMark", "%s visible", vuMark);
+
+            int targetCol;
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+                targetCol = 0;
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                targetCol = 1;
+            } else {
+                targetCol = 2;
+            }
+
+            robot.scoreGlyph(this, targetCol);
 
             telemetry.update();
         }

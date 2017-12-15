@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -45,6 +46,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -90,6 +92,7 @@ public class HardwareMain {
     BNO055IMU imu;
 
     ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
     Servo arm;
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -180,8 +183,9 @@ public class HardwareMain {
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
+        sensorColor = hwMap.get(ColorSensor.class, "color_sensor");
+        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
         arm = hwMap.servo.get("arm");
-
         arm.setPosition(1);
     }
 
@@ -322,11 +326,16 @@ public class HardwareMain {
     public int jewel(LinearOpMode opMode, boolean isAllianceRed) {
         if (opMode.opModeIsActive()) {
             arm.setPosition(0.1);
-            opMode.sleep(1000);
-        }
-        if (opMode.opModeIsActive()) {
-            int inchesToDrive = 5;
             float hsvValues[] = {0F, 0F, 0F};
+            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                    (int) (sensorColor.green() * SCALE_FACTOR),
+                    (int) (sensorColor.blue() * SCALE_FACTOR),
+                    hsvValues);
+            opMode.telemetry.addData("HSV: ", hsvValues);
+            opMode.telemetry.update();
+            opMode.sleep(1000);
+
+            int inchesToDrive = 5;
             Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                     (int) (sensorColor.green() * SCALE_FACTOR),
                     (int) (sensorColor.blue() * SCALE_FACTOR),
@@ -378,6 +387,17 @@ public class HardwareMain {
             bottomLeft.setPosition(MAX_POS);
             bottomRight.setPosition(MIN_POS);
         }
+    }
+
+    public void scoreGlyph(LinearOpMode opMode, int targetCol) {
+        int wallsDetected = -1;
+        while (opMode.opModeIsActive() && wallsDetected < targetCol) {
+            double boxDistance = sensorDistance.getDistance(DistanceUnit.CM);
+            if (boxDistance < 10) {
+                wallsDetected++;
+            }
+        }
+        // score
     }
 
  }
