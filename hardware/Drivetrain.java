@@ -157,11 +157,11 @@ public class Drivetrain extends Mechanism {
      * Drive to a relative position using encoders and an IMU.
      *
      * Robot will stop moving if any of three conditions occur:
-     * <li>
-     *  <ol>Move gets to the desired position</ol>
-     *  <ol>Move runs out of time</ol>
-     *  <ol>Driver stops the running OpMode</ol>
-     * </li>
+     * <ul>
+     *  <li>Move gets to the desired position</li>
+     *  <li>Move runs out of time</li>
+     *  <li>Driver stops the running OpMode</li>
+     * </ul>
      *
      * @param speed         maximum power of drivetrain motors when driving
      * @param leftInches    number of inches to move on the left side
