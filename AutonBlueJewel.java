@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.HardwareMain;
+import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
 
 @Autonomous(name="Auton: Blue Jewel", group="Auton")
 public class AutonBlueJewel extends LinearOpMode {
