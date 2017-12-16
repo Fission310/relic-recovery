@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
  *   - Drive Backwards for 24 inches
  *   - Stop and close the claw.
  *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
+ *  The code is written using a method called: driveToPos(speed, leftInches, rightInches, timeoutS)
  *  that performs the actual movement.
  *  This methods assumes that each movement is relative to the last stopping place.
  *  There are other ways to perform encoder based moves, but this method is probably the simplest.
@@ -53,7 +53,7 @@ public class AutonBlueLeftStoneJewelNearBox extends LinearOpMode {
 
         // Wait until we're told to go
         waitForStart();
-        robot.drivetrain.encoderDrive(this, Drivetrain.DRIVE_SPEED, 48, 48, 5.0);
+        robot.drivetrain.driveToPos(this, Drivetrain.DRIVE_SPEED, 48, 48, 5.0);
         robot.arm.getArm().setPosition(0.1);
 
         // Clamp onto glyph and init top servos
@@ -66,11 +66,11 @@ public class AutonBlueLeftStoneJewelNearBox extends LinearOpMode {
 
         //jewelMovement = robot.jewel(this, false);
         //sleep(1000);
-//        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  48 + jewelMovement,  48 + jewelMovement, 5.0);
+//        robot.driveToPos(this, HardwareMain.DRIVE_SPEED,  48 + jewelMovement,  48 + jewelMovement, 5.0);
 //        sleep(1000);
 //        robot.turn(this, HardwareMain.TURN_SPEED,  -90, 2.0);
 //        sleep(1000);
-//        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED,  24,  24, 5.0);
+//        robot.driveToPos(this, HardwareMain.DRIVE_SPEED,  24,  24, 5.0);
 
         // interesting note: can extend arm at end to ensure safe zone park
         sleep(1000);

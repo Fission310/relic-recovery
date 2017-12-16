@@ -13,15 +13,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * This class contains autonomous actions involving multiple mechanisms. These actions
  * may be common to more than one routine.
  */
-public class HardwareMain implements Mechanism {
+public class HardwareMain extends Mechanism {
 
     /* Mechanisms */
+    /**
+     * Instance variable containing robot's drivetrain.
+     */
     public Drivetrain drivetrain;
+    /**
+     * Instance variable containing robot's acquirer.
+     */
     public Acquirer acquirer;
+    /**
+     * Instance variable containing robot's arm.
+     */
     public Arm arm;
-
-    /* Private OpMode members. */
-    private LinearOpMode opMode;
 
     /* Miscellaneous mechanisms */
     DistanceSensor sensorDistance;
@@ -41,8 +47,10 @@ public class HardwareMain implements Mechanism {
      * @param opMode    the LinearOpMode that is currently running
      */
     public HardwareMain(LinearOpMode opMode){
-        this();
         this.opMode = opMode;
+        drivetrain = new Drivetrain(opMode);
+        acquirer = new Acquirer(opMode);
+        arm = new Arm(opMode);
     }
 
     /**
@@ -93,12 +101,12 @@ public class HardwareMain implements Mechanism {
                 // Moves forwards or backwards based on alliance color
                 if (isAllianceRed) {
                     // forwards
-                    drivetrain.encoderDrive(opMode, Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
+                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
                     arm.getArm().setPosition(1);    // Move the arm back into upright position
                     return inchesToDrive;
                 } else {
                     // backwards
-                    drivetrain.encoderDrive(opMode, Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
                     arm.getArm().setPosition(1);
                     return -inchesToDrive;
                 }
@@ -109,12 +117,12 @@ public class HardwareMain implements Mechanism {
                 // Moves forwards or backwards based on alliance color
                 if (isAllianceRed) {
                     // backwards
-                    drivetrain.encoderDrive(opMode, Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
                     arm.getArm().setPosition(1);
                     return inchesToDrive;
                 } else {
                     // forwards
-                    drivetrain.encoderDrive(opMode, Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
+                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
                     arm.getArm().setPosition(1);
                     return -inchesToDrive;
                 }

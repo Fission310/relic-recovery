@@ -62,7 +62,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  *   - Drive Backwards for 24 inches
  *   - Stop and close the claw.
  *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
+ *  The code is written using a method called: driveToPos(speed, leftInches, rightInches, timeoutS)
  *  that performs the actual movement.
  *  This methods assumes that each movement is relative to the last stopping place.
  *  There are other ways to perform encoder based moves, but this method is probably the simplest.

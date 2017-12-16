@@ -144,7 +144,7 @@ public class AutonVuMark extends LinearOpMode {
                 telemetry.addData("VuMark", "not visible");
                 telemetry.update();
 
-                robot.drivetrain.encoderDrive(this, Drivetrain.DRIVE_SPEED, 1, 1, 0.75);
+                robot.drivetrain.driveToPos(this, Drivetrain.DRIVE_SPEED, 1, 1, 0.75);
                 vuMark = RelicRecoveryVuMark.from(relicTemplate);
             }
             telemetry.addData("VuMark", "%s visible", vuMark);
