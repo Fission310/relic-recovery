@@ -4,6 +4,12 @@ First Tech Challenge Relic Recovery '17-'18 Robot Code<br>
 Written and maintained by Ryan Siu<br>
 With help from our programmers, Joe Suzuki and Matthew Chan
 
+## Instructions
+Clone this repository into the TeamCode directory of the FTC app, which can be found [here](https://github.com/ftctechnh/ftc_app).
+
+## Documentation
+Documentation can be found in the `doc` directory.
+
 ## Naming Conventions
 
 ### Autonomous
