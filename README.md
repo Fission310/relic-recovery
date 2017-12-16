@@ -27,3 +27,6 @@ Sensor or concept OpModes should be named `<Concept/Sensor><Description>.java` a
 
 ### Testing/Prototyping
 ALL test or prototyping OpMode files should be named `Test<Description>.java` and placed in the `prototype` directory.
+
+### Hardware
+Hardware files should be placed in the `hardware` directory. The main hardware map should be named `HardwareMain.java`.
