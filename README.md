@@ -1,4 +1,4 @@
-# sturdy-barnacle
+# relic-recovery
 Stuy Fission 310<br>
 First Tech Challenge Relic Recovery '17-'18 Robot Code<br>
 Written and maintained by Ryan Siu<br>
