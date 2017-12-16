@@ -53,7 +53,7 @@ public class AutonBlueLeftStoneJewelNearBox extends LinearOpMode {
 
         // Wait until we're told to go
         waitForStart();
-        robot.drivetrain.driveToPos(this, Drivetrain.DRIVE_SPEED, 48, 48, 5.0);
+        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 48, 48, 5.0);
         robot.arm.getArm().setPosition(0.1);
 
         // Clamp onto glyph and init top servos
