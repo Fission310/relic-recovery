@@ -8,7 +8,7 @@ With help from our programmers, Joe Suzuki and Matthew Chan
 Clone this repository into the TeamCode directory of the FTC app, which can be found [here](https://github.com/ftctechnh/ftc_app).
 
 ## Documentation
-Documentation can be found in the `doc` directory.
+Documentation can be found in the `docs` directory.
 
 ## Naming Conventions
 
