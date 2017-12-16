@@ -4,11 +4,11 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Arm {
+
+public class Arm implements Mechanism {
 
     public static final double BLUE = 115;
     public static final double RED = 85;

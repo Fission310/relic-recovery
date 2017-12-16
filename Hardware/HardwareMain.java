@@ -1,88 +1,54 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-/** TODO: UPDATE
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
+/**
+ * HardwareMain is the class that is used to define all of the hardware for a single robot. In this
+ * case, the robot is: Relic Recovery.
  *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
- *
- * TODO AUTONS:
- *  - Jewel + Safe zone park for all configurations
- *    - Blue left/right stone back park
- *    - Blue left stone forward park
- *    - Red left/right stone forward park
- *    - Red right stone back park
- *  - Jewel + Blue cryptobox score left (random)
- *  - Jewel + Red cryptobox score left (random)
+ * This class contains autonomous actions involving multiple mechanisms. These actions
+ * may be common to more than one routine.
  */
-public class HardwareMain {
+public class HardwareMain implements Mechanism {
 
-    /* Public OpMode members. */
-    public Drivetrain drivetrain = new Drivetrain();
-    public Acquirer acquirer = new Acquirer();
-    public Arm arm = new Arm();
+    /* Mechanisms */
+    public Drivetrain drivetrain;
+    public Acquirer acquirer;
+    public Arm arm;
 
+    /* Private OpMode members. */
     private LinearOpMode opMode;
 
+    /* Miscellaneous mechanisms */
     DistanceSensor sensorDistance;
 
-    /* Constructor */
+    /**
+     * Default constructor for HardwareMain. Instantiates public mechanism instance variables.
+     */
     public HardwareMain(){
-
+        drivetrain = new Drivetrain();
+        acquirer = new Acquirer();
+        arm = new Arm();
     }
+    /**
+     * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
+     * context for the robot.
+     *
+     * @param opMode    the LinearOpMode that is currently running
+     */
     public HardwareMain(LinearOpMode opMode){
+        this();
         this.opMode = opMode;
     }
 
-    /* Initialize standard Hardware interfaces */
+    /**
+     * Initializes all mechanisms on the robot.
+     * @param hwMap     robot's hardware map
+     */
     public void init(HardwareMap hwMap) {
         drivetrain.init(hwMap);
         acquirer.init(hwMap);
@@ -91,39 +57,63 @@ public class HardwareMain {
         sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
     }
 
-    /*
-    Assumes the color sensor faces the FRONT of the bot.
-    If reversed, negate drive inches.
-    Returns the number of inches moved, with respect to the original position.
+    /**
+     * Autonomous action for scoring the jewel. Uses the robot's arm mechanism to detect jewel color
+     * and moves forwards or backwards accordingly.
+     * This assumes the color sensor faces the front of the bot.
+     *
+     *  @param isAllianceRed    whether or not the robot is on the Red Alliance
+     *  @return                 number of inches moved, with respect to the original position
      */
     public int jewel(boolean isAllianceRed) {
+
+        // Run only if opMode is not stopped
         if (opMode.opModeIsActive()) {
+
+            // Arm should lower to in between the jewels
             arm.getArm().setPosition(0.1);
+
+            // Get test hue values and update telemetry
             float[] hsvValues = arm.getHSVValues();
             opMode.telemetry.addData("HSV: ", hsvValues);
             opMode.telemetry.update();
+
+            // Wait for arm to fully lower
             opMode.sleep(1000);
 
+            // Number of inches of driving required to knock the jewel off
             int inchesToDrive = 5;
+
+            // Get hue values to use
             hsvValues = arm.getHSVValues();
+
+            // Checks if hue value is greater than a threshold value indicating blue
             if (hsvValues[0] > Arm.BLUE) {
-                // blue detected
+
+                // Moves forwards or backwards based on alliance color
                 if (isAllianceRed) {
-                    // drive forward
+                    // forwards
                     drivetrain.encoderDrive(opMode, Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
-                    arm.getArm().setPosition(1);
+                    arm.getArm().setPosition(1);    // Move the arm back into upright position
                     return inchesToDrive;
                 } else {
+                    // backwards
                     drivetrain.encoderDrive(opMode, Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
                     arm.getArm().setPosition(1);
                     return -inchesToDrive;
                 }
-            } else if (hsvValues[0] < Arm.RED) {
+            }
+            // Checks if hue value is less than a threshold value indicating red
+            else if (hsvValues[0] < Arm.RED) {
+
+                // Moves forwards or backwards based on alliance color
                 if (isAllianceRed) {
+                    // backwards
                     drivetrain.encoderDrive(opMode, Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
                     arm.getArm().setPosition(1);
                     return inchesToDrive;
                 } else {
+                    // forwards
                     drivetrain.encoderDrive(opMode, Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
                     arm.getArm().setPosition(1);
                     return -inchesToDrive;
@@ -131,19 +121,38 @@ public class HardwareMain {
             }
         }
 
-        arm.getArm().setPosition(0.1);
+        // If the hue does not pass the threshold test, move the arm back into upright position
+        arm.getArm().setPosition(1);
         return 0;
     }
 
+
+    /**
+     * Autonomous action for scoring a glyph. Uses the robot's distance sensor to detect the robot's
+     * position using the cryptobox wall. Moves parallel to cryptobox until the target column is
+     * reached.
+     * This assumes the distance sensor faces the cryptobox wall.
+     *
+     *  @param targetCol    the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
+     */
     public void scoreGlyph(int targetCol) {
+
+        // Number of cryptobox walls detected
         int wallsDetected = -1;
+
+        // Continue moving parallel to cryptobox wall until the target column is reached
         while (opMode.opModeIsActive() && wallsDetected < targetCol) {
+
+            // Get the distance from the cryptobox or cryptobox walls
             double boxDistance = sensorDistance.getDistance(DistanceUnit.CM);
+
+            // Check if a wall is being detected
             if (boxDistance < 10) {
                 wallsDetected++;
             }
         }
-        // score
+
+        // Score the glyph after the target has been reached
     }
 
  }

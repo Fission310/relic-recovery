@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Acquirer {
+public class Acquirer implements Mechanism {
 
     public static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
     public static final double MAX_POS = 1.0;     // Maximum rotational position

@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-public class Drivetrain {
+public class Drivetrain implements Mechanism {
 
     public static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // NeverRest 40
     public static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
