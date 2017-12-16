@@ -9,57 +9,67 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
 import static java.lang.Math.abs;
 
 /**
- *
+ * TeleopMain is the primary TeleOp OpMode for Relic Recovery. All driver-controlled actions should
+ * be defined in this class.
  */
 @TeleOp(name = "Teleop: Main", group = "Teleop")
 public class TeleopMain extends OpMode {
 
+    /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
+    /* Robot hardware map */
     private HardwareMain robot = new HardwareMain();
 
+    /**
+     * Runs once when the OpMode is first enabled. The robot's hardware map is initialized.
+     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
+     */
     @Override
     public void init() {
         robot.init(hardwareMap);
     }
 
-    /*
-       * Code to run when the op mode is first enabled goes here
-       * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-       */
+
+    /**
+     * Runs continuously while OpMode is waiting to start.
+     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init_loop()
+     */
     @Override
     public void init_loop() { }
 
-    /*
-     * This method will be called ONCE when start is pressed
+    /**
+     * Runs once when the OpMode starts. Starts the OpMode's runtime counter.
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
      */
     @Override
     public void start() {
-        // TODO: add if button held while start, clamp servos together
         runtime.reset();
     }
 
-    /*
-     * This method will be called repeatedly in a loop
+    /**
+     * Runs continuously while the OpMode is active. Defines the driver-controlled actions
+     * according to gamepad input.
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
      */
     @Override
     public void loop() {
+        // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
+        // Drives the robot based on driver joystick input
         robot.drivetrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
+        // Clamps acquirer servos if triggers are pressed
         if (abs(gamepad1.left_trigger) > 0.1 || abs(gamepad2.left_trigger) > 0.1) {
-            // Keep stepping up until we hit the max value.
+            // Steps up the servo value until the max position is reached.
             robot.acquirer.clampIncrement(true);
-
-        }
-        else if (abs(gamepad1.right_trigger) > 0.1 || abs(gamepad2.right_trigger) > 0.1) {
-            // Keep stepping down until we hit the min value.
+        } else if (abs(gamepad1.right_trigger) > 0.1 || abs(gamepad2.right_trigger) > 0.1) {
+            // Steps down the servo value until the min position is reached.
             robot.acquirer.clampIncrement(false);
         }
 
+        // Moves slides if dpad up/down is pressed
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
             robot.acquirer.getSlides().setPower(-1);
         } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
@@ -68,6 +78,7 @@ public class TeleopMain extends OpMode {
             robot.acquirer.getSlides().setPower(0);
         }
 
+        // Toggles arm from upright and down positions if x or y is pressed
         if (gamepad1.x || gamepad2.x) {
             robot.arm.getArm().setPosition(0.1);
         } else if (gamepad1.y || gamepad2.y) {
