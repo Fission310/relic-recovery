@@ -32,8 +32,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Hardware.Drivetrain;
+import org.firstinspires.ftc.teamcode.Hardware.HardwareMain;
 
 
 /**
@@ -67,7 +68,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Disabled
 public class AutonBlueLeftStoneJewelNearBox extends LinearOpMode {
 
-    HardwareMain robot = new HardwareMain();
+    private HardwareMain robot = new HardwareMain(this);
 
     @Override
     public void runOpMode() {
@@ -76,29 +77,13 @@ public class AutonBlueLeftStoneJewelNearBox extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
-
         robot.init(hardwareMap);
-
-        robot.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftFront.getCurrentPosition(),
-                          robot.rightFront.getCurrentPosition());
-        telemetry.update();
+        robot.drivetrain.encoderInit();
 
         // Wait until we're told to go
         waitForStart();
-        robot.encoderDrive(this, HardwareMain.DRIVE_SPEED, 48, 48, 5.0);
-        robot.arm.setPosition(0.1);
+        robot.drivetrain.encoderDrive(this, Drivetrain.DRIVE_SPEED, 48, 48, 5.0);
+        robot.arm.getArm().setPosition(0.1);
 
         // Clamp onto glyph and init top servos
         //robot.clamp(this);

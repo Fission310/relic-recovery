@@ -30,10 +30,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Hardware.HardwareMain;
 
 @Autonomous(name="Auton: Red Jewel", group="Auton")
 public class AutonRedJewel extends LinearOpMode {
@@ -41,7 +41,7 @@ public class AutonRedJewel extends LinearOpMode {
     /* Declare OpMode members. */
     private ElapsedTime     runtime = new ElapsedTime();
 
-    HardwareMain robot = new HardwareMain();
+    private HardwareMain robot = new HardwareMain(this);
 
     @Override
     public void runOpMode() {
@@ -58,7 +58,7 @@ public class AutonRedJewel extends LinearOpMode {
         // Clamp onto glyph and init top servos
         //robot.clamp(this);
 
-        robot.jewel(this, true);
+        robot.jewel(true);
 
     }
 

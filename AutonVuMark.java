@@ -33,13 +33,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.Hardware.Drivetrain;
+import org.firstinspires.ftc.teamcode.Hardware.HardwareMain;
 
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
@@ -60,12 +61,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Concept: VuMark Id", group ="Concept")
+@Autonomous(name="Auton: VuMark", group ="Auton")
 public class AutonVuMark extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";
 
-    HardwareMain robot = new HardwareMain();
+    private HardwareMain robot = new HardwareMain(this);
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -118,6 +119,7 @@ public class AutonVuMark extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
         robot.init(hardwareMap);
+        robot.drivetrain.encoderInit();
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
@@ -142,7 +144,7 @@ public class AutonVuMark extends LinearOpMode {
                 telemetry.addData("VuMark", "not visible");
                 telemetry.update();
 
-                robot.encoderDrive(this, HardwareMain.DRIVE_SPEED, 1, 1, 0.75);
+                robot.drivetrain.encoderDrive(this, Drivetrain.DRIVE_SPEED, 1, 1, 0.75);
                 vuMark = RelicRecoveryVuMark.from(relicTemplate);
             }
             telemetry.addData("VuMark", "%s visible", vuMark);
@@ -156,7 +158,7 @@ public class AutonVuMark extends LinearOpMode {
                 targetCol = 2;
             }
 
-            robot.scoreGlyph(this, targetCol);
+            robot.scoreGlyph(targetCol);
 
             telemetry.update();
         }
