@@ -77,7 +77,7 @@ public class AutonVuMark extends LinearOpMode {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
-        // Load the data set containing the VuMarks for Relic Recovery.
+        // Load the data set containing the VuMarks for Relic Recovery
         VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
