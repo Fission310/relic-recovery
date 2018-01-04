@@ -1,14 +1,13 @@
-package org.firstinspires.ftc.teamcode.hardware;
+package org.firstinspires.ftc.teamcode.hardware.tankdrive;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Arm;
-import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
+import org.firstinspires.ftc.teamcode.hardware.Mechanism;
 
 /**
  * HardwareTank is the class that is used to define all of the hardware for a single robot. In this
@@ -17,7 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
  * This class contains autonomous actions involving multiple mechanisms. These actions
  * may be common to more than one routine.
  */
-public class HardwareMain extends Mechanism {
+public class HardwareTank extends Mechanism {
 
     /* Mechanisms */
     /**
@@ -39,7 +38,7 @@ public class HardwareMain extends Mechanism {
     /**
      * Default constructor for HardwareTank. Instantiates public mechanism instance variables.
      */
-    public HardwareMain(){
+    public HardwareTank(){
         drivetrain = new Drivetrain();
         acquirer = new Acquirer();
         arm = new Arm();
@@ -50,7 +49,7 @@ public class HardwareMain extends Mechanism {
      *
      * @param opMode    the LinearOpMode that is currently running
      */
-    public HardwareMain(LinearOpMode opMode){
+    public HardwareTank(LinearOpMode opMode){
         this.opMode = opMode;
         drivetrain = new Drivetrain(opMode);
         acquirer = new Acquirer(opMode);

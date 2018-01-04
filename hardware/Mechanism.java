@@ -23,6 +23,6 @@ public abstract class Mechanism {
      * sets motors and servos to their starting positions.
      * @param hwMap     robot's hardware map
      */
-    abstract void init(HardwareMap hwMap);
+    public abstract void init(HardwareMap hwMap);
 
 }

@@ -49,7 +49,7 @@ import java.util.Locale;
  * {@link SensorBNO055IMU} gives a short demo on how to use the BNO055 Inertial Motion Unit (IMU) from AdaFruit.
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
-@Autonomous(name = "Sensor: BNO055 IMU", group = "Sensor")
+@Autonomous(name = "Sensor: IMU", group = "Sensor")
 public class SensorBNO055IMU extends LinearOpMode {
 
     // The IMU sensor object

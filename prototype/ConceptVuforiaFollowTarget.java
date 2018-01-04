@@ -54,7 +54,7 @@ import java.util.List;
  * distance and angle to the target is calculated from the raw camera vision data. The robot moves
  * towards the target based on these calculations.
  */
-@Autonomous(name="Concept: Vuforia Follow Target", group ="Concept")
+@Autonomous(name="Concept: Vuforia Target Follow", group ="Concept")
 public class ConceptVuforiaFollowTarget extends LinearOpMode {
 
     /* Constants */

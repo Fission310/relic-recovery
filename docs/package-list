@@ -1,4 +1,6 @@
 org.firstinspires.ftc.teamcode
 org.firstinspires.ftc.teamcode.hardware
+org.firstinspires.ftc.teamcode.hardware.mecanum
+org.firstinspires.ftc.teamcode.hardware.tankdrive
 org.firstinspires.ftc.teamcode.legacy
 org.firstinspires.ftc.teamcode.prototype

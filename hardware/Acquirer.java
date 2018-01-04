@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+
 
 /**
  * Acquirer is the class that is used to define all of the hardware for a robot's drivetrain.
@@ -19,12 +21,12 @@ public class Acquirer extends Mechanism {
     /**
      * Amount to change servo position every cycle
      */
-    public static final double INCREMENT = 0.01;
+    public static final double INCREMENT = 0.02;
 
     // Maximum rotational position
-    private static final double MAX_POS = 1.0;
+    private static final double MAX_POS = 0.80;
     // Minimum rotational position
-    private static final double MIN_POS = 0.0;
+    private static final double MIN_POS = 0.50;
 
     /* Hardware members */
     private DcMotor slides;
@@ -54,8 +56,8 @@ public class Acquirer extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-        left = hwMap.servo.get("bottomLeft");
-        right = hwMap.servo.get("bottomRight");
+        left = hwMap.servo.get("left");
+        right = hwMap.servo.get("right");
 
         // Retrieve motor from hardware map and assign to instance vars
         slides = hwMap.dcMotor.get("slides");

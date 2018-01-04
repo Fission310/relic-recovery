@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+
 /**
  * Arm is the class that is used to define all of the hardware for a robot's arm.
  * Arm must be instantiated, then initialized using <code>init()</code> before being used.
@@ -53,7 +55,7 @@ public class Arm extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve color sensor from hardware map
-        sensorColor = hwMap.get(ColorSensor.class, "color_sensor");
+        //sensorColor = hwMap.get(ColorSensor.class, "color_sensor");
 
         // Retrieve arm from hardware map and set to initial position
         arm = hwMap.servo.get("arm");
