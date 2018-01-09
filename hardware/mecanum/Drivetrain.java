@@ -23,6 +23,8 @@ import org.firstinspires.ftc.teamcode.hardware.Mechanism;
  *
  * This class also contains autonomous actions involving the drivetrain. <code>encoderInit()</code>
  * must be called before an autonomous action can be called.
+ *
+ * This class describes a mecanum drivetrain.
  */
 public class Drivetrain extends Mechanism {
 
@@ -127,6 +129,7 @@ public class Drivetrain extends Mechanism {
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
+    public void stop() { }
 
     /**
      * Initializes motors for encoder driving. Must be called before calling methods that use

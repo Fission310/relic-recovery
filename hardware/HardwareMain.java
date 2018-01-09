@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.detectors.CryptoboxDetector;
+import com.disnodeteam.dogecv.detectors.JewelDetector;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.hardware.Mechanism;
-import org.firstinspires.ftc.teamcode.hardware.Acquirer;
-import org.firstinspires.ftc.teamcode.hardware.Arm;
+
+// Change depending on Drivetrain used
 import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
 
 /**
@@ -34,7 +36,8 @@ public class HardwareMain extends Mechanism {
     public Arm arm;
 
     /* Miscellaneous mechanisms */
-    DistanceSensor sensorDistance;
+    ModernRoboticsI2cRangeSensor sensorDistance;
+    CryptoboxDetector cryptoboxDetector;
 
     /**
      * Default constructor for HardwareTank. Instantiates public mechanism instance variables.
@@ -66,7 +69,24 @@ public class HardwareMain extends Mechanism {
         acquirer.init(hwMap);
         arm.init(hwMap);
 
-        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
+        // Initialize range sensor
+        sensorDistance = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+
+        // Initialize CV
+        cryptoboxDetector = new CryptoboxDetector();
+        cryptoboxDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
+
+        cryptoboxDetector.rotateMat = false;
+
+        //Optional Test Code to load images via Drawables
+        //cryptoboxDetector.useImportedImage = true;
+        //cryptoboxDetector.SetTestMat(com.qualcomm.ftcrobotcontroller.R.drawable.test_cv4);
+
+        cryptoboxDetector.enable();
+    }
+
+    public void stop() {
+        cryptoboxDetector.disable();
     }
 
     /**
@@ -86,9 +106,7 @@ public class HardwareMain extends Mechanism {
             arm.getArm().setPosition(0.1);
 
             // Get test hue values and update telemetry
-            float[] hsvValues = arm.getHSVValues();
-            opMode.telemetry.addData("HSV: ", hsvValues);
-            opMode.telemetry.update();
+            float[] hsvValues;
 
             // Wait for arm to fully lower
             opMode.sleep(1000);
@@ -97,44 +115,64 @@ public class HardwareMain extends Mechanism {
             int inchesToDrive = 5;
 
             // Get hue values to use
-            hsvValues = arm.getHSVValues();
+            // hsvValues = arm.getHSVValues();
+            // opMode.telemetry.addData("HSV: ", hsvValues[0]);
+            // opMode.telemetry.update();
+            // opMode.sleep(1000);
+            opMode.sleep(3000);
+            JewelDetector.JewelOrder jewelOrder = arm.getJewelOrder();
+            opMode.telemetry.addData("Order: ", jewelOrder);
+            opMode.telemetry.update();
+
 
             // Checks if hue value is greater than a threshold value indicating blue
-            if (hsvValues[0] > Arm.BLUE) {
+            if (jewelOrder.equals(JewelDetector.JewelOrder.BLUE_RED)) {
 
                 // Moves forwards or backwards based on alliance color
                 if (isAllianceRed) {
-                    // forwards
+                    // backwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
                     arm.getArm().setPosition(1);    // Move the arm back into upright position
-                    return inchesToDrive;
+                    opMode.sleep(1000);
+                    arm.stop();
+                    return -inchesToDrive;
                 } else {
-                    // backwards
+                    // forwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
                     arm.getArm().setPosition(1);
-                    return -inchesToDrive;
+                    opMode.sleep(1000);
+                    arm.stop();
+                    return inchesToDrive;
                 }
             }
             // Checks if hue value is less than a threshold value indicating red
-            else if (hsvValues[0] < Arm.RED) {
+            else if (jewelOrder.equals(JewelDetector.JewelOrder.RED_BLUE)) {
 
                 // Moves forwards or backwards based on alliance color
                 if (isAllianceRed) {
-                    // backwards
+                    // forwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
                     arm.getArm().setPosition(1);
+                    opMode.sleep(1000);
+                    arm.stop();
                     return inchesToDrive;
                 } else {
-                    // forwards
+                    // backwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
                     arm.getArm().setPosition(1);
+                    opMode.sleep(1000);
+                    arm.stop();
                     return -inchesToDrive;
                 }
             }
+
+            // If the hue does not pass the threshold test, move the arm back into upright position
+            arm.getArm().setPosition(1);
+            opMode.sleep(1000);
+            arm.stop();
+            return 0;
         }
 
-        // If the hue does not pass the threshold test, move the arm back into upright position
-        arm.getArm().setPosition(1);
         return 0;
     }
 
@@ -148,6 +186,15 @@ public class HardwareMain extends Mechanism {
      *  @param targetCol    the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
      */
     public void scoreGlyph(int targetCol) {
+        while (opMode.opModeIsActive()) {
+            opMode.telemetry.addData("isCryptoBoxDetected", cryptoboxDetector.isCryptoBoxDetected());
+            opMode.telemetry.addData("isColumnDetected ",  cryptoboxDetector.isColumnDetected());
+
+            opMode.telemetry.addData("Column Left ",  cryptoboxDetector.getCryptoBoxLeftPosition());
+            opMode.telemetry.addData("Column Center ",  cryptoboxDetector.getCryptoBoxCenterPosition());
+            opMode.telemetry.addData("Column Right ",  cryptoboxDetector.getCryptoBoxRightPosition());
+            opMode.telemetry.update();
+        }
 
         // Number of cryptobox walls detected
         int wallsDetected = -1;
@@ -162,6 +209,8 @@ public class HardwareMain extends Mechanism {
             if (boxDistance < 10) {
                 wallsDetected++;
             }
+
+            drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 1, 1, 1);
         }
 
         // Score the glyph after the target has been reached

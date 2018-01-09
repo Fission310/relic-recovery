@@ -34,8 +34,10 @@ public class AutonRedJewel extends LinearOpMode {
         waitForStart();
 
         // Score jewel
-        robot.jewel(true);
-
+        double inches = robot.jewel(true);
+        telemetry.addData("Movement: ", inches);
+        telemetry.update();
+        sleep(1000);
     }
 
 }

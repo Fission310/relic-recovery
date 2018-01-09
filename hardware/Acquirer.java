@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.hardware.Mechanism;
-
 
 /**
  * Acquirer is the class that is used to define all of the hardware for a robot's drivetrain.
@@ -26,7 +24,7 @@ public class Acquirer extends Mechanism {
     // Maximum rotational position
     private static final double MAX_POS = 0.80;
     // Minimum rotational position
-    private static final double MIN_POS = 0.50;
+    private static final double MIN_POS = 0.40;
 
     /* Hardware members */
     private DcMotor slides;
@@ -72,6 +70,8 @@ public class Acquirer extends Mechanism {
         left.setPosition(MAX_POS);
         right.setPosition(MIN_POS);
     }
+
+    public void stop() { }
 
     /**
      * Accessor method for slides motor.
