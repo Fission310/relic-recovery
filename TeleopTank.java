@@ -12,8 +12,8 @@ import static java.lang.Math.abs;
  * TeleopMain is the primary TeleOp OpMode for Relic Recovery. All driver-controlled actions should
  * be defined in this class.
  */
-@TeleOp(name = "Teleop: Main", group = "Teleop")
-public class TeleopMain extends OpMode {
+@TeleOp(name = "Teleop: Tank", group = "Teleop")
+public class TeleopTank extends OpMode {
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -23,7 +23,7 @@ public class TeleopMain extends OpMode {
 
     /**
      * Runs once when the OpMode is first enabled. The robot's hardware map is initialized.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
+     * @see OpMode#init()
      */
     @Override
     public void init() {
@@ -33,14 +33,14 @@ public class TeleopMain extends OpMode {
 
     /**
      * Runs continuously while OpMode is waiting to start.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init_loop()
+     * @see OpMode#init_loop()
      */
     @Override
     public void init_loop() { }
 
     /**
      * Runs once when the OpMode starts. Starts the OpMode's runtime counter.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+     * @see OpMode#loop()
      */
     @Override
     public void start() {
@@ -50,7 +50,7 @@ public class TeleopMain extends OpMode {
     /**
      * Runs continuously while the OpMode is active. Defines the driver-controlled actions
      * according to gamepad input.
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+     * @see OpMode#loop()
      */
     @Override
     public void loop() {
@@ -58,8 +58,7 @@ public class TeleopMain extends OpMode {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
         // Drives the robot based on driver joystick input
-
-        robot.drivetrain.drive(gamepad1.right_stick_x, gamepad1.right_stick_y, gamepad1.left_stick_x);
+        robot.drivetrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
         // Clamps acquirer servos if triggers are pressed
         if (abs(gamepad1.left_trigger) > 0.1 || abs(gamepad2.left_trigger) > 0.1) {

@@ -147,14 +147,22 @@ public class Drivetrain extends Mechanism {
     /**
      * Set drivetrain motor power based on input.
      *
-     * @param left      power for left side of drivetrain (-1 to 1)
-     * @param right     power for right side of drivetrain (-1 to 1)
+     * @param x         x component of drive vector
+     * @param y         y component of drive vector
+     * @param turn      turn vector
      */
-    public void drive(double left, double right) {
-        leftFront.setPower(left);
-        leftBack.setPower(left);
-        rightBack.setPower(right);
-        rightFront.setPower(right);
+    public void drive(double x, double y, double turn) {
+        double r = Math.hypot(x, y);
+        double robotAngle = Math.atan2(y, x) - Math.PI / 4;
+        final double v1 = r * Math.cos(robotAngle) + turn;
+        final double v2 = r * Math.sin(robotAngle) - turn;
+        final double v3 = r * Math.sin(robotAngle) + turn;
+        final double v4 = r * Math.cos(robotAngle) - turn;
+
+        leftFront.setPower(v1);
+        leftBack.setPower(v3);
+        rightBack.setPower(v4);
+        rightFront.setPower(v2);
     }
 
     /**
