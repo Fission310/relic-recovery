@@ -154,15 +154,24 @@ public class Drivetrain extends Mechanism {
     public void drive(double x, double y, double turn) {
         double r = Math.hypot(x, y);
         double robotAngle = Math.atan2(y, x) - Math.PI / 4;
-        final double v1 = r * Math.cos(robotAngle) + turn;
-        final double v2 = r * Math.sin(robotAngle) - turn;
-        final double v3 = r * Math.sin(robotAngle) + turn;
-        final double v4 = r * Math.cos(robotAngle) - turn;
+        double v1 = r * Math.cos(robotAngle) - turn;
+        double v2 = r * Math.sin(robotAngle) + turn;
+        double v3 = r * Math.sin(robotAngle) - turn;
+        double v4 = r * Math.cos(robotAngle) + turn;
 
+        //leftFront.setPower(v1);
+        //leftBack.setPower(v3);
         leftFront.setPower(v1);
         leftBack.setPower(v3);
-        rightBack.setPower(v4);
-        rightFront.setPower(v2);
+        rightBack.setPower(v2);
+        rightFront.setPower(v4);
+    }
+
+    public void testDrive(double x, double y, double turn) {
+        leftFront.setPower((-y - x) / 2 + turn / 2);
+        rightFront.setPower((y - x) / 2 + turn / 2);
+        leftBack.setPower((-y - x) / 2 + turn / 2);
+        rightBack.setPower((y - x) / 2 + turn / 2);
     }
 
     /**
@@ -182,6 +191,10 @@ public class Drivetrain extends Mechanism {
      */
     public void driveToPos(double speed, double leftInches, double rightInches, double timeoutS) {
 
+        // Drivetrain adjustments
+        leftInches = -leftInches;
+        rightInches = -rightInches;
+
         // Target position variables
         int newLeftTarget;
         int newRightTarget;
@@ -191,13 +204,13 @@ public class Drivetrain extends Mechanism {
 
         // Determine new target position, and pass to motor controller
         newLeftTarget = leftFront.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightTarget = rightFront.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        newRightTarget = rightBack.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
         leftFront.setTargetPosition(newLeftTarget);
-        rightFront.setTargetPosition(newRightTarget);
+        rightBack.setTargetPosition(newRightTarget);
 
         // Turn On RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
@@ -206,7 +219,7 @@ public class Drivetrain extends Mechanism {
         // Loop until a condition is met
         while (opMode.opModeIsActive() &&
                 (runtime.seconds() < timeoutS) &&
-                leftFront.isBusy() && rightFront.isBusy()) {
+                leftFront.isBusy() && rightBack.isBusy()) {
 
             // Get IMU angles
             Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -219,7 +232,7 @@ public class Drivetrain extends Mechanism {
 
             // Set power of drivetrain motors accounting for adjustment
             leftFront.setPower(Math.abs(speed) + p);
-            rightFront.setPower(Math.abs(speed) - p);
+            rightBack.setPower(Math.abs(speed) - p);
 
                 /*
                 if (leftInches < 0) {
@@ -228,16 +241,16 @@ public class Drivetrain extends Mechanism {
                     leftBack.setPower(Math.abs(speed));
                 }
                 if (rightInches < 0) {
-                    rightBack.setPower(-Math.abs(speed));
+                    .setPower(-Math.abs(speed));
                 } else {
-                    rightBack.setPower(Math.abs(speed));
+                    .setPower(Math.abs(speed));
                 }*/
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
             opMode.telemetry.addData("Path2", "Running at %7d :%7d",
                     leftFront.getCurrentPosition(),
-                    rightFront.getCurrentPosition());
+                    rightBack.getCurrentPosition());
             opMode.telemetry.addData("Heading: ", "%f", gyroAngle);
             opMode.telemetry.addData("AccX: ", "%f", imu.getAcceleration().xAccel);
             opMode.telemetry.addData("AccY: ", "%f", imu.getAcceleration().yAccel);
@@ -246,7 +259,7 @@ public class Drivetrain extends Mechanism {
 
         // Stop all motion
         leftFront.setPower(0);
-        rightFront.setPower(0);
+        rightBack.setPower(0);
 
         // Turn off RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

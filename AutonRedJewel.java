@@ -38,6 +38,8 @@ public class AutonRedJewel extends LinearOpMode {
         telemetry.addData("Movement: ", inches);
         telemetry.update();
         sleep(1000);
+
+        robot.stop();
     }
 
 }

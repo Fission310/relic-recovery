@@ -5,15 +5,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
 
 /**
- * AutonBlueJewel is a class containing the following autonomous routine for the BLUE alliance:
+ * AutonBlueJewelGlyph is a class containing the following autonomous routine for the BLUE alliance:
  * <ol>
  *   <li>Score jewel</li>
+ *   <li>Score glyph</li>
+ *   <li>Park in safe zone</li>
  * </ol>
  */
-@Autonomous(name="Auton: Blue Jewel", group="Auton")
-public class AutonBlueJewel extends LinearOpMode {
+@Autonomous(name="Auton: Red Jewel Glyph", group="Auton")
+public class AutonRedJewelGlyph extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -34,11 +37,12 @@ public class AutonBlueJewel extends LinearOpMode {
         waitForStart();
 
         // Score jewel
-        double inches = robot.jewel(false);
+        double inches = robot.jewel(true);
         telemetry.addData("Movement: ", inches);
         telemetry.update();
         sleep(1000);
 
+        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 48*4, 48*4, 15);
         robot.stop();
 
     }

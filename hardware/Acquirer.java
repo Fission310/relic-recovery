@@ -22,9 +22,9 @@ public class Acquirer extends Mechanism {
     public static final double INCREMENT = 0.02;
 
     // Maximum rotational position
-    private static final double MAX_POS = 0.80;
+    private static final double MAX_POS = 1;
     // Minimum rotational position
-    private static final double MIN_POS = 0.40;
+    private static final double MIN_POS = 0.10; //0.3
 
     /* Hardware members */
     private DcMotor slides;

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
 
 /**
  * AutonBlueJewelGlyph is a class containing the following autonomous routine for the BLUE alliance:
@@ -36,12 +37,13 @@ public class AutonBlueJewelGlyph extends LinearOpMode {
         waitForStart();
 
         // Score jewel
-//        double inches = robot.jewel(false);
-//        telemetry.addData("Movement: ", inches);
-//        telemetry.update();
-//        sleep(1000);
+        double inches = robot.jewel(false);
+        telemetry.addData("Movement: ", inches);
+        telemetry.update();
+        sleep(1000);
 
-        robot.scoreGlyph(1);
+        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -48*4, -48*4, 15);
+        robot.stop();
 
     }
 

@@ -32,7 +32,7 @@ public class Arm extends Mechanism {
     /* Hardware members */
     private ColorSensor sensorColor;
     private Servo arm;
-    private JewelDetector jewelDetector = null;
+    private JewelDetector jewelDetector;
 
 
     /**
@@ -57,7 +57,7 @@ public class Arm extends Mechanism {
     public void init(HardwareMap hwMap) {
         // Retrieve color sensor from hardware map
         // sensorColor = hwMap.get(ColorSensor.class, "sensor_color");
-        sensorColor = hwMap.colorSensor.get("sensor_color");
+        // sensorColor = hwMap.colorSensor.get("sensor_color");
 
         // Initialize CV
         jewelDetector = new JewelDetector();

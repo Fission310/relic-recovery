@@ -72,21 +72,21 @@ public class HardwareMain extends Mechanism {
         // Initialize range sensor
         sensorDistance = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
 
-        // Initialize CV
-        cryptoboxDetector = new CryptoboxDetector();
-        cryptoboxDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
-
-        cryptoboxDetector.rotateMat = false;
-
-        //Optional Test Code to load images via Drawables
-        //cryptoboxDetector.useImportedImage = true;
-        //cryptoboxDetector.SetTestMat(com.qualcomm.ftcrobotcontroller.R.drawable.test_cv4);
-
-        cryptoboxDetector.enable();
+//        // Initialize CV
+//        cryptoboxDetector = new CryptoboxDetector();
+//        cryptoboxDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
+//
+//        cryptoboxDetector.rotateMat = false;
+//
+//        //Optional Test Code to load images via Drawables
+//        //cryptoboxDetector.useImportedImage = true;
+//        //cryptoboxDetector.SetTestMat(com.qualcomm.ftcrobotcontroller.R.drawable.test_cv4);
+//
+//        cryptoboxDetector.enable();
     }
 
     public void stop() {
-        cryptoboxDetector.disable();
+        //cryptoboxDetector.disable();
     }
 
     /**
@@ -102,17 +102,11 @@ public class HardwareMain extends Mechanism {
         // Run only if opMode is not stopped
         if (opMode.opModeIsActive()) {
 
-            // Arm should lower to in between the jewels
-            arm.getArm().setPosition(0.1);
-
             // Get test hue values and update telemetry
             float[] hsvValues;
 
-            // Wait for arm to fully lower
-            opMode.sleep(1000);
-
             // Number of inches of driving required to knock the jewel off
-            int inchesToDrive = 5;
+            int inchesToDrive = 10;
 
             // Get hue values to use
             // hsvValues = arm.getHSVValues();
@@ -123,6 +117,12 @@ public class HardwareMain extends Mechanism {
             JewelDetector.JewelOrder jewelOrder = arm.getJewelOrder();
             opMode.telemetry.addData("Order: ", jewelOrder);
             opMode.telemetry.update();
+
+            // Arm should lower to in between the jewels
+            arm.getArm().setPosition(0);
+
+            // Wait for arm to fully lower
+            opMode.sleep(1000);
 
 
             // Checks if hue value is greater than a threshold value indicating blue
