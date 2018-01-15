@@ -129,8 +129,6 @@ public class Drivetrain extends Mechanism {
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
-    public void stop() { }
-
     /**
      * Initializes motors for encoder driving. Must be called before calling methods that use
      * encoders.

@@ -25,19 +25,4 @@ public abstract class Mechanism {
      */
     public abstract void init(HardwareMap hwMap);
 
-    /**
-     * Stops hardware on the robot.
-     */
-    public abstract void stop();
-
-    /**
-     * Outputs the specified parameters to telemetry. Can only output one line at a time.
-     * @param tag       description of outputted value
-     * @param o         value to output
-     */
-    public void print(String tag, Object o) {
-        opMode.telemetry.addData(tag, o);
-        opMode.telemetry.update();
-    }
-
 }

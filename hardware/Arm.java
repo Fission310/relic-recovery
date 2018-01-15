@@ -5,6 +5,7 @@ import android.graphics.Color;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -32,7 +33,6 @@ public class Arm extends Mechanism {
     /* Hardware members */
     private ColorSensor sensorColor;
     private Servo arm;
-    private JewelDetector jewelDetector;
 
 
     /**
@@ -59,31 +59,9 @@ public class Arm extends Mechanism {
         // sensorColor = hwMap.get(ColorSensor.class, "sensor_color");
         // sensorColor = hwMap.colorSensor.get("sensor_color");
 
-        // Initialize CV
-        jewelDetector = new JewelDetector();
-        jewelDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
-
-        //Jewel Detector Settings
-        jewelDetector.areaWeight = 0.02;
-        jewelDetector.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
-        //jewelDetector.perfectArea = 6500; <- Needed for PERFECT_AREA
-        jewelDetector.debugContours = true;
-        jewelDetector.maxDiffrence = 15;
-        jewelDetector.ratioWeight = 15;
-        jewelDetector.minArea = 700;
-
-        jewelDetector.enable();
-
         // Retrieve arm from hardware map and set to initial position
         arm = hwMap.servo.get("arm");
         arm.setPosition(1);
-    }
-
-    /**
-     * Stops arm hardware.
-     */
-    public void stop() {
-        jewelDetector.disable();
     }
 
     /**
@@ -107,12 +85,6 @@ public class Arm extends Mechanism {
         return hsvValues;
     }
 
-    /**
-     * Get the order of Jewels using DogeCV.
-     * @return      BLUERED, REDBLUE, or UNDECIDED based on jewel order
-     */
-    public JewelDetector.JewelOrder getJewelOrder() {
-        return jewelDetector.getCurrentOrder();
-    }
+
 
 }

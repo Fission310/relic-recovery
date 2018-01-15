@@ -71,8 +71,6 @@ public class Acquirer extends Mechanism {
         right.setPosition(MIN_POS);
     }
 
-    public void stop() { }
-
     /**
      * Accessor method for slides motor.
      * @return      slides motor

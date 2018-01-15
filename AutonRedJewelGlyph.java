@@ -37,13 +37,12 @@ public class AutonRedJewelGlyph extends LinearOpMode {
         waitForStart();
 
         // Score jewel
-        double inches = robot.jewel(true);
-        telemetry.addData("Movement: ", inches);
-        telemetry.update();
-        sleep(1000);
+//        double inches = robot.jewel(true);
+//        telemetry.addData("Movement: ", inches);
+//        telemetry.update();
+//        sleep(1000);
 
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 48*4, 48*4, 15);
-        robot.stop();
+        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 24*2, 24*2, 15);
 
     }
 

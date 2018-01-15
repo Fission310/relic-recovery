@@ -4,12 +4,13 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.CryptoboxDetector;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 // Change depending on Drivetrain used
 import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
-
+import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 
 /**
@@ -72,21 +73,19 @@ public class HardwareMain extends Mechanism {
         // Initialize range sensor
         sensorDistance = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
 
-//        // Initialize CV
-//        cryptoboxDetector = new CryptoboxDetector();
-//        cryptoboxDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
-//
-//        cryptoboxDetector.rotateMat = false;
-//
-//        //Optional Test Code to load images via Drawables
-//        //cryptoboxDetector.useImportedImage = true;
-//        //cryptoboxDetector.SetTestMat(com.qualcomm.ftcrobotcontroller.R.drawable.test_cv4);
-//
-//        cryptoboxDetector.enable();
-    }
+        if (opMode instanceof Autonomous) {
+            // Initialize CV
+            cryptoboxDetector = new CryptoboxDetector();
+            cryptoboxDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
 
-    public void stop() {
-        //cryptoboxDetector.disable();
+            cryptoboxDetector.rotateMat = false;
+
+            //Optional Test Code to load images via Drawables
+            //cryptoboxDetector.useImportedImage = true;
+            //cryptoboxDetector.SetTestMat(com.qualcomm.ftcrobotcontroller.R.drawable.test_cv4);
+
+            cryptoboxDetector.enable();
+        }
     }
 
     /**
@@ -97,7 +96,7 @@ public class HardwareMain extends Mechanism {
      *  @param isAllianceRed    whether or not the robot is on the Red Alliance
      *  @return                 number of inches moved, with respect to the original position
      */
-    public int jewel(boolean isAllianceRed) {
+    public int jewel(VisionManager visionManager, boolean isAllianceRed) {
 
         // Run only if opMode is not stopped
         if (opMode.opModeIsActive()) {
@@ -114,7 +113,7 @@ public class HardwareMain extends Mechanism {
             // opMode.telemetry.update();
             // opMode.sleep(1000);
             opMode.sleep(3000);
-            JewelDetector.JewelOrder jewelOrder = arm.getJewelOrder();
+            JewelDetector.JewelOrder jewelOrder = visionManager.getJewelOrder();
             opMode.telemetry.addData("Order: ", jewelOrder);
             opMode.telemetry.update();
 
@@ -131,17 +130,15 @@ public class HardwareMain extends Mechanism {
                 // Moves forwards or backwards based on alliance color
                 if (isAllianceRed) {
                     // backwards
-                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
+                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
                     arm.getArm().setPosition(1);    // Move the arm back into upright position
                     opMode.sleep(1000);
-                    arm.stop();
                     return -inchesToDrive;
                 } else {
                     // forwards
-                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
                     arm.getArm().setPosition(1);
                     opMode.sleep(1000);
-                    arm.stop();
                     return inchesToDrive;
                 }
             }
@@ -151,17 +148,15 @@ public class HardwareMain extends Mechanism {
                 // Moves forwards or backwards based on alliance color
                 if (isAllianceRed) {
                     // forwards
-                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
-                    arm.getArm().setPosition(1);
-                    opMode.sleep(1000);
-                    arm.stop();
-                    return inchesToDrive;
-                } else {
-                    // backwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
                     arm.getArm().setPosition(1);
                     opMode.sleep(1000);
-                    arm.stop();
+                    return inchesToDrive;
+                } else {
+                    // backwards
+                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
+                    arm.getArm().setPosition(1);
+                    opMode.sleep(1000);
                     return -inchesToDrive;
                 }
             }
@@ -169,7 +164,6 @@ public class HardwareMain extends Mechanism {
             // If the hue does not pass the threshold test, move the arm back into upright position
             arm.getArm().setPosition(1);
             opMode.sleep(1000);
-            arm.stop();
             return 0;
         }
 

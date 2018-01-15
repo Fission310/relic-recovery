@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
+import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 /**
  * AutonBlueJewel is a class containing the following autonomous routine for the BLUE alliance:
@@ -27,6 +28,10 @@ public class AutonBlueJewel extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        // Initialize CV
+        VisionManager visionManager = new VisionManager();
+        visionManager.jewelInit(hardwareMap);
+
         // Initialize robot
         robot.init(hardwareMap);
 
@@ -34,12 +39,13 @@ public class AutonBlueJewel extends LinearOpMode {
         waitForStart();
 
         // Score jewel
-        double inches = robot.jewel(false);
+        double inches = robot.jewel(visionManager, false);
         telemetry.addData("Movement: ", inches);
         telemetry.update();
         sleep(1000);
 
-        robot.stop();
+        // Stop CV
+        visionManager.jewelStop();
 
     }
 
