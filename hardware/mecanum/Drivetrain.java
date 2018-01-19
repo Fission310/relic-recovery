@@ -196,19 +196,21 @@ public class Drivetrain extends Mechanism {
         rightInches = -rightInches;
 
         // Target position variables
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftFrontTarget, newLeftBackTarget;
+        int newRightFrontTarget, newRightBackTarget;
 
         // Current heading angle of robot
         double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = leftFront.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightTarget = rightFront.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-        leftFront.setTargetPosition(newLeftTarget);
-        rightFront.setTargetPosition(newRightTarget);
-        leftBack.setTargetPosition(newLeftTarget);
-        rightBack.setTargetPosition(newRightTarget);
+        newLeftFrontTarget = leftFront.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+        newRightFrontTarget = rightFront.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        newLeftBackTarget = leftFront.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+        newRightBackTarget = rightFront.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        leftFront.setTargetPosition(newLeftFrontTarget);
+        rightFront.setTargetPosition(newRightFrontTarget);
+        leftBack.setTargetPosition(newLeftBackTarget);
+        rightBack.setTargetPosition(newRightBackTarget);
 
         // Turn On RUN_TO_POSITION
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -240,26 +242,12 @@ public class Drivetrain extends Mechanism {
             leftBack.setPower(Math.abs(speed) + p);
             rightBack.setPower(-Math.abs(speed) + p);
 
-                /*
-                if (leftInches < 0) {
-                    leftBack.setPower(-Math.abs(speed));
-                } else {
-                    leftBack.setPower(Math.abs(speed));
-                }
-                if (rightInches < 0) {
-                    .setPower(-Math.abs(speed));
-                } else {
-                    .setPower(Math.abs(speed));
-                }*/
-
             // Display info for the driver.
-            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftFrontTarget, newRightFrontTarget);
             opMode.telemetry.addData("Path2", "Running at %7d :%7d",
                     leftFront.getCurrentPosition(),
                     rightFront.getCurrentPosition());
             opMode.telemetry.addData("Heading: ", "%f", gyroAngle);
-            opMode.telemetry.addData("AccX: ", "%f", imu.getAcceleration().xAccel);
-            opMode.telemetry.addData("AccY: ", "%f", imu.getAcceleration().yAccel);
             opMode.telemetry.update();
         }
 
