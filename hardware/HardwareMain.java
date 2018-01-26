@@ -35,6 +35,10 @@ public class HardwareMain extends Mechanism {
      * Instance variable containing robot's arm.
      */
     public Arm arm;
+    /**
+     * Instance variable containing robot's relic.
+     */
+    public Relic relic;
 
     /* Miscellaneous mechanisms */
     ModernRoboticsI2cRangeSensor sensorDistance;
@@ -47,6 +51,7 @@ public class HardwareMain extends Mechanism {
         drivetrain = new Drivetrain();
         acquirer = new Acquirer();
         arm = new Arm();
+        relic = new Relic();
     }
     /**
      * Overloaded constructor for HardwareTank. Calls the default constructor and sets the OpMode
@@ -59,6 +64,7 @@ public class HardwareMain extends Mechanism {
         drivetrain = new Drivetrain(opMode);
         acquirer = new Acquirer(opMode);
         arm = new Arm(opMode);
+        relic = new Relic(opMode);
     }
 
     /**
@@ -69,6 +75,7 @@ public class HardwareMain extends Mechanism {
         drivetrain.init(hwMap);
         acquirer.init(hwMap);
         arm.init(hwMap);
+        relic.init(hwMap);
 
         // Initialize range sensor
         sensorDistance = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");

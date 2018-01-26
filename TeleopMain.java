@@ -62,6 +62,7 @@ public class TeleopMain extends OpMode {
         robot.drivetrain.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         // Clamps acquirer servos if triggers are pressed
+        /*
         if (abs(gamepad1.left_trigger) > 0.1 || abs(gamepad2.left_trigger) > 0.1) {
             // Steps up the servo value until the max position is reached.
             robot.acquirer.clampIncrement(true);
@@ -69,21 +70,38 @@ public class TeleopMain extends OpMode {
             // Steps down the servo value until the min position is reached.
             robot.acquirer.clampIncrement(false);
         }
+        */
 
         // Moves slides if dpad up/down is pressed
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
-            robot.acquirer.getSlides().setPower(-1);
+            robot.relic.setSlidesPower(1);
         } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
-            robot.acquirer.getSlides().setPower(1);
+            robot.relic.setSlidesPower(-1);
         } else {
-            robot.acquirer.getSlides().setPower(0);
+            robot.relic.setSlidesPower(0);
         }
 
-        // Toggles arm from upright and down positions if x or y is pressed
-        if (gamepad1.x || gamepad2.x) {
+        // Toggles arm from upright and down positions if start or back is pressed
+        if (gamepad1.start || gamepad2.start) {
             robot.arm.getArm().setPosition(0.1);
-        } else if (gamepad1.y || gamepad2.y) {
+        } else if (gamepad1.back || gamepad2.back) {
             robot.arm.getArm().setPosition(1);
+        }
+
+        // Toggles turn servo from up or down positions if a or b is pressed
+        if (gamepad1.a || gamepad2.a) {
+            robot.relic.turnDown();
+        } else if (gamepad1.b || gamepad2.b) {
+            robot.relic.turnUp();
+        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
+            robot.relic.turnInside();
+        }
+
+        // Toggles clamp servo from up or down positions if x or y is pressed
+        if (gamepad1.x || gamepad2.x) {
+            robot.relic.clamp();
+        } else if (gamepad1.y || gamepad2.y) {
+            robot.relic.unclamp();
         }
     }
 }

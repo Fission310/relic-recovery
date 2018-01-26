@@ -27,10 +27,7 @@ public class Acquirer extends Mechanism {
     private static final double MIN_POS = 0.10; //0.3
 
     /* Hardware members */
-    private DcMotor slides;
-
-    private Servo left;
-    private Servo right;
+    private DcMotor intake;
 
 
     /**
@@ -54,88 +51,22 @@ public class Acquirer extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-        left = hwMap.servo.get("left");
-        right = hwMap.servo.get("right");
 
         // Retrieve motor from hardware map and assign to instance vars
-        slides = hwMap.dcMotor.get("slides");
+        intake = hwMap.dcMotor.get("intake");
 
         // Set braking behavior
-        slides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set initial power
-        slides.setPower(0);
-
-        // Set initial position
-        left.setPosition(MAX_POS);
-        right.setPosition(MIN_POS);
+        intake.setPower(0);
     }
 
     /**
-     * Accessor method for slides motor.
-     * @return      slides motor
+     * Sets power for intake motor.
      */
-    public DcMotor getSlides() {
-        return slides;
-    }
-
-    /**
-     * Clamps a glyph by setting the acquirer servos to a preset value.
-     */
-    public void clamp() {
-        if (opMode.opModeIsActive()) {
-            left.setPosition(MAX_POS / 3);
-            right.setPosition((1 - MIN_POS) * 2 / 3);
-        }
-    }
-
-    /**
-     * Relases a glyph by setting the acquirer servos to a preset value.
-     */
-    public void release(LinearOpMode opMode) {
-        if (opMode.opModeIsActive()) {
-            left.setPosition(MAX_POS);
-            right.setPosition(MIN_POS);
-        }
-    }
-
-    /**
-     * Increments the position of the acquiring servos in the direction specified.
-     * @param is_clamp  <code>true</code> if the intention is to clamp, <code>false</code> otherwise
-     */
-    public void clampIncrement(boolean is_clamp) {
-
-        // Positive or negative according to parameter
-        int sign = is_clamp ? 1 : -1;
-
-        // Increment servo position
-        left.setPosition(left.getPosition() + sign * INCREMENT);
-        right.setPosition(right.getPosition() - sign * INCREMENT);
-
-        // If absolute servo position is past the max, set it back to the max or min
-        if (left.getPosition() >= MAX_POS ) {
-            left.setPosition(MAX_POS);
-        } else if (right.getPosition() <= MIN_POS) {
-            right.setPosition(MIN_POS);
-        }
-    }
-
-    /**
-     * Increments the position of the acquiring servos by the amount specified.
-     * @param increment      amount to increment servo position
-     */
-    public void clampIncrement(double increment) {
-
-        // Increment servo position
-        left.setPosition(left.getPosition() + increment);
-        right.setPosition(right.getPosition() - increment);
-
-        // If absolute servo position is past the max, set it back to the max or min
-        if (left.getPosition() >= MAX_POS ) {
-            left.setPosition(MAX_POS);
-        } else if (right.getPosition() <= MIN_POS) {
-            right.setPosition(MIN_POS);
-        }
+    public void setIntakePower(double power) {
+        intake.setPower(power);
     }
 
 }
