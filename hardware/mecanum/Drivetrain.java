@@ -167,12 +167,14 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(v2);
     }
 
+    /*
     public void testDrive(double x, double y, double turn) {
         leftFront.setPower((-y - x) / 2 + turn / 2);
         rightFront.setPower((y - x) / 2 + turn / 2);
         leftBack.setPower((-y - x) / 2 + turn / 2);
         rightBack.setPower((y - x) / 2 + turn / 2);
     }
+    */
 
     /**
      * Drive to a relative position using encoders and an IMU.
@@ -315,5 +317,14 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
+    }
+
+    /**
+     * Strafe in a specified direction at a specified speed.
+     * @param speed         maximum power of drivetrain motors when driving
+     * @param direction     direction of strafing (positive for right, negative for left)
+     */
+    public void strafe(double speed, double direction) {
+
     }
 }

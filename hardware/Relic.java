@@ -15,7 +15,7 @@ public class Relic extends Mechanism {
 
     /* CONSTANTS */
     public static final double MAX_TURN_POS = 1;
-    public static final double MIN_TURN_POS = 0.5;
+    public static final double MIN_TURN_POS = 0.45;
     public static final double INSIDE_TURN_POS = 0;
     public static final double MAX_CLAMP_POS = 1;
     public static final double MIN_CLAMP_POS = 0.5;

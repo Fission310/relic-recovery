@@ -7,8 +7,10 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 // Change depending on Drivetrain used
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.VisionManager;
 
@@ -42,7 +44,6 @@ public class HardwareMain extends Mechanism {
 
     /* Miscellaneous mechanisms */
     ModernRoboticsI2cRangeSensor sensorDistance;
-    CryptoboxDetector cryptoboxDetector;
 
     /**
      * Default constructor for HardwareTank. Instantiates public mechanism instance variables.
@@ -79,20 +80,6 @@ public class HardwareMain extends Mechanism {
 
         // Initialize range sensor
         sensorDistance = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
-
-        if (opMode instanceof Autonomous) {
-            // Initialize CV
-            cryptoboxDetector = new CryptoboxDetector();
-            cryptoboxDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
-
-            cryptoboxDetector.rotateMat = false;
-
-            //Optional Test Code to load images via Drawables
-            //cryptoboxDetector.useImportedImage = true;
-            //cryptoboxDetector.SetTestMat(com.qualcomm.ftcrobotcontroller.R.drawable.test_cv4);
-
-            cryptoboxDetector.enable();
-        }
     }
 
     /**
@@ -188,60 +175,41 @@ public class HardwareMain extends Mechanism {
      */
     public void scoreGlyph(int targetCol) {
         while (opMode.opModeIsActive()) {
-            opMode.telemetry.addData("isCryptoBoxDetected", cryptoboxDetector.isCryptoBoxDetected());
-            opMode.telemetry.addData("isColumnDetected ",  cryptoboxDetector.isColumnDetected());
+            // Number of cryptobox walls detected
+            int wallsDetected = -1;
 
-            opMode.telemetry.addData("Column Left ",  cryptoboxDetector.getCryptoBoxLeftPosition());
-            opMode.telemetry.addData("Column Center ",  cryptoboxDetector.getCryptoBoxCenterPosition());
-            opMode.telemetry.addData("Column Right ",  cryptoboxDetector.getCryptoBoxRightPosition());
-            opMode.telemetry.update();
-            // center is always 190 +- 10
+            // Continue moving parallel to cryptobox wall until the target column is reached
+            while (opMode.opModeIsActive() && wallsDetected < targetCol) {
 
-            int imageCenter = 180;
-            int threshold = 10;
+                // Get the distance from the cryptobox or cryptobox walls
+                double boxDistance = sensorDistance.getDistance(DistanceUnit.CM);
 
-            if (cryptoboxDetector.isCryptoBoxDetected()) {
-                int centerPos = cryptoboxDetector.getCryptoBoxCenterPosition();
-                while (opMode.opModeIsActive() &&
-                        cryptoboxDetector.isCryptoBoxDetected() &&
-                        Math.abs(centerPos - imageCenter) < threshold) {
-                    if (centerPos > imageCenter + threshold) {
-                        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 1, 1, 1);
-                    } else {
-                        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -1, -1, 1);
-                    }
-                    centerPos = cryptoboxDetector.getCryptoBoxCenterPosition();
+                // Check if a wall is being detected
+                if (boxDistance < 10) {
+                    wallsDetected++;
                 }
 
-                // Turn and score
-                if (Math.abs(centerPos - imageCenter) < threshold) {
-
-                }
-
-            } else {
-                drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 1, 1, 1);
+                // use IMU to stay parallel to wall if necessary
+                drivetrain.drive(0.5, 0, 0);
             }
 
+            drivetrain.drive(0, 0, 0);
+
+            // Score the glyph after the target has been reached
+
+            // expel glyph from acquirer
+
+            double boxDistance = sensorDistance.getDistance(DistanceUnit.CM);
+            ElapsedTime runtime = new ElapsedTime();
+            runtime.reset();
+
+            while (boxDistance < 5 && runtime.seconds() < 3) {
+                drivetrain.drive(0, 0.5, 0);
+            }
+
+            drivetrain.drive(0, 0, 0);
         }
 
-        // Number of cryptobox walls detected
-//        int wallsDetected = -1;
-//
-//        // Continue moving parallel to cryptobox wall until the target column is reached
-//        while (opMode.opModeIsActive() && wallsDetected < targetCol) {
-//
-//            // Get the distance from the cryptobox or cryptobox walls
-//            double boxDistance = sensorDistance.getDistance(DistanceUnit.CM);
-//
-//            // Check if a wall is being detected
-//            if (boxDistance < 10) {
-//                wallsDetected++;
-//            }
-//
-//            drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 1, 1, 1);
-//        }
-//
-//        // Score the glyph after the target has been reached
     }
 
  }
