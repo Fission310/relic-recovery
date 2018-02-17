@@ -14,11 +14,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Relic extends Mechanism {
 
     /* CONSTANTS */
-    public static final double MAX_TURN_POS = 1;
-    public static final double MIN_TURN_POS = 0.45;
-    public static final double INSIDE_TURN_POS = 0;
-    public static final double MAX_CLAMP_POS = 1;
-    public static final double MIN_CLAMP_POS = 0.5;
+    public static final double TURN_INSIDE_STATE = 1;
+    public static final double TURN_NEUTRAL_STATE = 0.45;
+    public static final double TURN_ACQ_STATE = 0;
+    public static final double CLAMP_REL_STATE = 1;
+    public static final double CLAMP_GET_STATE = 0.5;
 
     /* Hardware members */
     private DcMotor slides;
@@ -42,9 +42,9 @@ public class Relic extends Mechanism {
     @Override
     public void init(HardwareMap hwMap) {
         // Retrieve motor from hardware map and assign to instance vars
-        slides = hwMap.dcMotor.get("slides");
-        turn = hwMap.servo.get("turn");
-        clamp = hwMap.servo.get("clamp");
+        slides = hwMap.dcMotor.get(RCConfig.SLIDES);
+        turn = hwMap.servo.get(RCConfig.TURN);
+        clamp = hwMap.servo.get(RCConfig.CLAMP);
 
         // Set braking behavior
         slides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -68,34 +68,34 @@ public class Relic extends Mechanism {
      * Sets the clamp servo to the clamped position.
      */
     public void clamp() {
-        clamp.setPosition(MIN_CLAMP_POS);
+        clamp.setPosition(CLAMP_GET_STATE);
     }
 
     /**
      * Sets the clamp servo to the maximum unclamped position.
      */
     public void unclamp() {
-        clamp.setPosition(MAX_CLAMP_POS);
+        clamp.setPosition(CLAMP_REL_STATE);
     }
 
     /**
      * Sets the turn servo to the down position.
      */
     public void turnDown() {
-        turn.setPosition(MIN_TURN_POS);
+        turn.setPosition(TURN_ACQ_STATE);
     }
 
     /**
      * Sets the turn servo to the up position.
      */
     public void turnUp() {
-        turn.setPosition(MAX_TURN_POS);
+        turn.setPosition(TURN_NEUTRAL_STATE);
     }
 
     /**
      * Sets the turn servo to the inside position.
      */
     public void turnInside() {
-        turn.setPosition(INSIDE_TURN_POS);
+        turn.setPosition(TURN_INSIDE_STATE);
     }
 }

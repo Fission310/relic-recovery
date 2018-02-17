@@ -79,7 +79,7 @@ public class HardwareMain extends Mechanism {
         relic.init(hwMap);
 
         // Initialize range sensor
-        sensorDistance = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        sensorDistance = hwMap.get(ModernRoboticsI2cRangeSensor.class, RCConfig.RANGE_SENSOR);
     }
 
     /**
@@ -112,7 +112,7 @@ public class HardwareMain extends Mechanism {
             opMode.telemetry.update();
 
             // Arm should lower to in between the jewels
-            arm.getArm().setPosition(0);
+            arm.setArmPosition(0);
 
             // Wait for arm to fully lower
             opMode.sleep(1000);
@@ -125,13 +125,13 @@ public class HardwareMain extends Mechanism {
                 if (isAllianceRed) {
                     // backwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
-                    arm.getArm().setPosition(1);    // Move the arm back into upright position
+                    arm.setArmPosition(1);    // Move the arm back into upright position
                     opMode.sleep(1000);
                     return -inchesToDrive;
                 } else {
                     // forwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
-                    arm.getArm().setPosition(1);
+                    arm.setArmPosition(1);
                     opMode.sleep(1000);
                     return inchesToDrive;
                 }
@@ -143,20 +143,20 @@ public class HardwareMain extends Mechanism {
                 if (isAllianceRed) {
                     // forwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
-                    arm.getArm().setPosition(1);
+                    arm.setArmPosition(1);
                     opMode.sleep(1000);
                     return inchesToDrive;
                 } else {
                     // backwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
-                    arm.getArm().setPosition(1);
+                    arm.setArmPosition(1);
                     opMode.sleep(1000);
                     return -inchesToDrive;
                 }
             }
 
             // If the hue does not pass the threshold test, move the arm back into upright position
-            arm.getArm().setPosition(1);
+            arm.setArmPosition(1);
             opMode.sleep(1000);
             return 0;
         }
@@ -173,7 +173,7 @@ public class HardwareMain extends Mechanism {
      *
      *  @param targetCol    the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
      */
-    public void scoreGlyph(int targetCol) {
+    public void scoreGlyph(int targetCol, int distanceToWall) {
         while (opMode.opModeIsActive()) {
             // Number of cryptobox walls detected
             int wallsDetected = -1;
@@ -185,15 +185,16 @@ public class HardwareMain extends Mechanism {
                 double boxDistance = sensorDistance.getDistance(DistanceUnit.CM);
 
                 // Check if a wall is being detected
-                if (boxDistance < 10) {
+                if (boxDistance < distanceToWall / 2) {
                     wallsDetected++;
                 }
 
                 // use IMU to stay parallel to wall if necessary
-                drivetrain.drive(0.5, 0, 0);
+                drivetrain.drive(0.5, (distanceToWall - boxDistance) / 10, 0);
             }
 
             drivetrain.drive(0, 0, 0);
+            opMode.sleep(200);
 
             // Score the glyph after the target has been reached
 

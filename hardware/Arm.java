@@ -60,16 +60,15 @@ public class Arm extends Mechanism {
         // sensorColor = hwMap.colorSensor.get("sensor_color");
 
         // Retrieve arm from hardware map and set to initial position
-        arm = hwMap.servo.get("arm");
+        arm = hwMap.servo.get(RCConfig.ARM);
         arm.setPosition(1);
     }
 
     /**
-     * Accessor method for arm servo.
-     * @return      arm servo
+     * Set servo arm position.
      */
-    public Servo getArm() {
-        return arm;
+    public void setArmPosition(double pos) {
+        arm.setPosition(pos);
     }
 
     /**

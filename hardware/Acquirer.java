@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
- * Acquirer is the class that is used to define all of the hardware for a robot's drivetrain.
+ * Acquirer is the class that is used to define all of the hardware for a robot's acquirer.
  * Acquirer must be instantiated, then initialized using <code>init()</code> before being used.
  *
  * This class also contains autonomous actions involving the acquirer.
@@ -16,19 +16,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Acquirer extends Mechanism {
 
     /* CONSTANTS */
-    /**
-     * Amount to change servo position every cycle
-     */
-    public static final double INCREMENT = 0.02;
-
-    // Maximum rotational position
-    private static final double MAX_POS = 1;
-    // Minimum rotational position
-    private static final double MIN_POS = 0.10; //0.3
 
     /* Hardware members */
     private DcMotor intake;
-
 
     /**
      * Default constructor for Acquirer.
@@ -53,7 +43,7 @@ public class Acquirer extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
 
         // Retrieve motor from hardware map and assign to instance vars
-        intake = hwMap.dcMotor.get("intake");
+        intake = hwMap.dcMotor.get(RCConfig.INTAKE);
 
         // Set braking behavior
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.hardware.Mechanism;
+import org.firstinspires.ftc.teamcode.hardware.RCConfig;
 
 /**
  * Drivetrain is the class that is used to define all of the hardware for a robot's drivetrain.
@@ -89,10 +90,10 @@ public class Drivetrain extends Mechanism {
     public void init(HardwareMap hwMap) {
 
         // Retrieve motors from hardware map and assign to instance vars
-        leftFront = hwMap.dcMotor.get("leftFront");
-        leftBack = hwMap.dcMotor.get("leftBack");
-        rightFront = hwMap.dcMotor.get("rightFront");
-        rightBack = hwMap.dcMotor.get("rightBack");
+        leftFront = hwMap.dcMotor.get(RCConfig.LEFT_FRONT);
+        leftBack = hwMap.dcMotor.get(RCConfig.LEFT_BACK);
+        rightFront = hwMap.dcMotor.get(RCConfig.RIGHT_FRONT);
+        rightBack = hwMap.dcMotor.get(RCConfig.RIGHT_BACK);
 
         // Set motor direction (AndyMark configuration)
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -122,7 +123,7 @@ public class Drivetrain extends Mechanism {
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU
-        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu = hwMap.get(BNO055IMU.class, RCConfig.IMU);
         imu.initialize(parameters);
 
         // Start the logging of measured acceleration
@@ -161,10 +162,10 @@ public class Drivetrain extends Mechanism {
         double v3 = r * Math.sin(robotAngle) - turn;
         double v4 = r * Math.cos(robotAngle) + turn;
 
-        leftFront.setPower(v1);
-        leftBack.setPower(v3);
-        rightBack.setPower(v4);
-        rightFront.setPower(v2);
+        leftFront.setPower(v2);
+        leftBack.setPower(v4);
+        rightBack.setPower(v3);
+        rightFront.setPower(v1);
     }
 
     /*

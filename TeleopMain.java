@@ -11,6 +11,25 @@ import static java.lang.Math.abs;
 /**
  * TeleopMain is the primary TeleOp OpMode for Relic Recovery. All driver-controlled actions should
  * be defined in this class.
+ *
+ * BUTTON MAPPINGS:
+ * Left stick:      Control robot's velocity and direction
+ * Right stick x:   Turn robot
+ * X:               Turn intake on/off
+ * Y:               Expel glyphs from intake
+ * A:               Toggles between flipping states: acquiring, neutral, and score
+ * B:               Set flipper to acquiring state
+ * Left bumper:
+ * Right bumper:
+ * Left trigger:    Lower flipper lift
+ * Right trigger:   Raise flipper lift
+ * DPAD_UP:         Extend relic mechanism
+ * DPAD_DOWN:       Retract relic mechanism
+ * DPAD_LEFT:
+ * DPAD_RIGHT:
+ * START:           Toggle arm position
+ * BACK:
+ *
  */
 @TeleOp(name = "Teleop: Main", group = "Teleop")
 public class TeleopMain extends OpMode {
@@ -21,6 +40,10 @@ public class TeleopMain extends OpMode {
     /* Robot hardware map */
     private HardwareMain robot = new HardwareMain();
 
+    /* Button debouncing */
+    private boolean acquirerState, acquirerDebounce;
+    private boolean armState, armDebounce;
+
     /**
      * Runs once when the OpMode is first enabled. The robot's hardware map is initialized.
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#init()
@@ -28,6 +51,11 @@ public class TeleopMain extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
+
+        acquirerState = false;
+        acquirerDebounce = false;
+        armState = false;
+        armDebounce = false;
     }
 
 
@@ -83,25 +111,43 @@ public class TeleopMain extends OpMode {
 
         // Toggles arm from upright and down positions if start or back is pressed
         if (gamepad1.start || gamepad2.start) {
-            robot.arm.getArm().setPosition(0.1);
-        } else if (gamepad1.back || gamepad2.back) {
-            robot.arm.getArm().setPosition(1);
+            if (!armDebounce) {
+                armState = !armState;
+                robot.arm.setArmPosition(armState ? 0.1 : 1);
+                armDebounce = true;
+            }
+        } else {
+            armDebounce = false;
         }
 
         // Toggles turn servo from up or down positions if a or b is pressed
         if (gamepad1.a || gamepad2.a) {
             robot.relic.turnDown();
         } else if (gamepad1.b || gamepad2.b) {
-            robot.relic.turnUp();
+            robot.relic.turnInside();
         } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
             robot.relic.turnInside();
         }
 
         // Toggles clamp servo from up or down positions if x or y is pressed
-        if (gamepad1.x || gamepad2.x) {
+        if (gamepad1.right_bumper || gamepad2.right_bumper) {
             robot.relic.clamp();
-        } else if (gamepad1.y || gamepad2.y) {
+        } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
             robot.relic.unclamp();
+        }
+
+        // Toggles acquirer
+        if (gamepad1.x || gamepad2.x) {
+            if (!acquirerDebounce) {
+                acquirerState = !acquirerState;
+                robot.acquirer.setIntakePower(acquirerState ? 1 : 0);
+                acquirerDebounce = true;
+            }
+        } else if (gamepad1.y || gamepad2.y) {
+            acquirerState = true;
+            robot.acquirer.setIntakePower(-1);
+        } else {
+            acquirerDebounce = false;
         }
     }
 }
