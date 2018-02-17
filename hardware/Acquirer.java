@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -16,9 +17,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Acquirer extends Mechanism {
 
     /* CONSTANTS */
+    public static final double INTAKE_L_INIT = 0;
+    public static final double INTAKE_R_INIT = 0;
+    public static final double INTAKE_L_ACT = 0.5;
+    public static final double INTAKE_R_ACT = 0.5;
 
     /* Hardware members */
-    private DcMotor intake;
+    private DcMotor intakeL;
+    private DcMotor intakeR;
+
+    private Servo intakeLServo;
+    private Servo intakeRServo;
+
+    /* State variables */
+    private boolean activated;
 
     /**
      * Default constructor for Acquirer.
@@ -41,22 +53,47 @@ public class Acquirer extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
+        intakeLServo = hwMap.servo.get(RCConfig.INTAKE_L_SERVO);
+        intakeRServo = hwMap.servo.get(RCConfig.INTAKE_R_SERVO);
 
         // Retrieve motor from hardware map and assign to instance vars
-        intake = hwMap.dcMotor.get(RCConfig.INTAKE);
+        intakeL = hwMap.dcMotor.get(RCConfig.INTAKE_L_MOTOR);
+        intakeR = hwMap.dcMotor.get(RCConfig.INTAKE_R_MOTOR);
 
         // Set braking behavior
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Set polarity
+        intakeL.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
-        intake.setPower(0);
+        intakeL.setPower(0);
+        intakeR.setPower(0);
+    }
+
+    public void activate() {
+        intakeLServo.setPosition(INTAKE_L_ACT);
+        intakeRServo.setPosition(INTAKE_R_ACT);
+        activated = true;
+    }
+
+    public void deactivate() {
+        intakeLServo.setPosition(INTAKE_L_INIT);
+        intakeRServo.setPosition(INTAKE_R_INIT);
+        activated = false;
     }
 
     /**
      * Sets power for intake motor.
      */
     public void setIntakePower(double power) {
-        intake.setPower(power);
+        if (!activated) {
+            activate();
+        }
+        intakeL.setPower(power);
+        intakeR.setPower(power);
     }
 
 }

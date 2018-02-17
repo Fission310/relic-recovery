@@ -11,7 +11,8 @@ public class RCConfig {
     public static final String LEFT_BACK = "left_back";
     public static final String RIGHT_FRONT = "right_front";
     public static final String RIGHT_BACK = "right_back";
-    public static final String INTAKE = "intake";
+    public static final String INTAKE_L_MOTOR = "intakeL_motor";
+    public static final String INTAKE_R_MOTOR = "intakeR_motor";
     public static final String SLIDES = "slides";
 
     // Servos
@@ -20,8 +21,8 @@ public class RCConfig {
     public static final String ARM = "arm";
     public static final String FLIP_L = "flip_left";
     public static final String FLIP_R = "flip_right";
-    public static final String INTAKE_L = "intake_left";
-    public static final String INTAKE_R = "intake_right";
+    public static final String INTAKE_L_SERVO = "intakeL_servo";
+    public static final String INTAKE_R_SERVO = "intakeR_servo";
 
     // I2C
     public static final String IMU = "imu";

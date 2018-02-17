@@ -17,18 +17,18 @@ import static java.lang.Math.abs;
  * Right stick x:   Turn robot
  * X:               Turn intake on/off
  * Y:               Expel glyphs from intake
- * A:               Toggles between flipping states: acquiring, neutral, and score
- * B:               Set flipper to acquiring state
- * Left bumper:
- * Right bumper:
- * Left trigger:    Lower flipper lift
- * Right trigger:   Raise flipper lift
+ * -A:              Toggles between flipping states: acquiring, neutral, and score
+ * -B:              Set flipper to acquiring state
+ * -Left bumper:    Toggle between relic turn score and neutral states
+ * -Right bumper:   (slow mode?)
+ * -Left trigger:   Lower flipper lift
+ * -Right trigger:  Raise flipper lift
  * DPAD_UP:         Extend relic mechanism
  * DPAD_DOWN:       Retract relic mechanism
- * DPAD_LEFT:
- * DPAD_RIGHT:
+ * -DPAD_LEFT:      Toggle relic clamp
+ * -DPAD_RIGHT:     Set relic turn to inside robot state
  * START:           Toggle arm position
- * BACK:
+ * -BACK:
  *
  */
 @TeleOp(name = "Teleop: Main", group = "Teleop")

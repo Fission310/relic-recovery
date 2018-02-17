@@ -61,10 +61,23 @@ public class Flipper extends Mechanism {
         // Set initial power
         lift.setPower(0);
 
+        flipAcq();
+    }
+
+    public void flipAcq() {
         flipL.setPosition(FLIP_L_ACQ_STATE);
         flipR.setPosition(FLIP_R_ACQ_STATE);
     }
 
+    public void flipNeutral() {
+        flipL.setPosition(FLIP_L_NEUTRAL_STATE);
+        flipR.setPosition(FLIP_R_NEUTRAL_STATE);
+    }
+
+    public void flipScore() {
+        flipL.setPosition(FLIP_L_SCORE_STATE);
+        flipR.setPosition(FLIP_R_SCORE_STATE);
+    }
 
     /**
      * Sets power for lift motor.
