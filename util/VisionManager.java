@@ -12,13 +12,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+/**
+ * This class handles the robot CV functions and makes combining Vuforia and DogeCV easy in a single
+ * OpMode. To detect a game element, the appropriate "detector" should first be initialized, and can
+ * then be used through methods in this class. After usage, the detector should be stopped.
+ */
 public class VisionManager {
 
+    /* Detectors and Instace Variables */
     private JewelDetector jewelDetector;
     private ClosableVuforiaLocalizer vuforia;
     private VuforiaTrackables relicTrackables;
     private VuforiaTrackable relicTemplate;
 
+    /**
+     * Initializes the jewel detector.
+     * @param hwMap the robot's hardware map
+     */
     public void jewelInit(HardwareMap hwMap) {
         // Initialize CV
         jewelDetector = new JewelDetector();
@@ -36,6 +46,9 @@ public class VisionManager {
         jewelDetector.enable();
     }
 
+    /**
+     * Stops the jewel detector.
+     */
     public void jewelStop() {
         jewelDetector.disable();
     }
@@ -48,6 +61,10 @@ public class VisionManager {
         return jewelDetector.getCurrentOrder();
     }
 
+    /**
+     * Initializes Vuforia for detecting VuMarks.
+     * @param hwMap the robot's hardware map
+     */
     public void vuforiaInit(HardwareMap hwMap) {
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
@@ -92,6 +109,10 @@ public class VisionManager {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
     }
 
+    /**
+     * Get the Cryptobox Key by deciphering a VuMark using Vuforia.
+     * @return  0 for left column, 1 for center column, 2 for right column, or -1 for undetermined
+     */
     public int getKey() {
         relicTrackables.activate();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -106,6 +127,9 @@ public class VisionManager {
         }
     }
 
+    /**
+     * Stops the Vuforia detector.
+     */
     public void vuforiaStop() {
         vuforia.close();
     }

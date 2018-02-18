@@ -66,10 +66,16 @@ public class Arm extends Mechanism {
         arm.setPosition(1);
     }
 
+    /**
+     * Set the arm to the up position.
+     */
     public void armUp() {
         arm.setPosition(ARM_UP_POS);
     }
 
+    /**
+     * Set the arm to the down position
+     */
     public void armDown() {
         arm.setPosition(ARM_DOWN_POS);
     }

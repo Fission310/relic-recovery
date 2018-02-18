@@ -75,18 +75,27 @@ public class Acquirer extends Mechanism {
         intakeR.setPower(0);
     }
 
+    /**
+     * Set the acquirer servos to the scoring position (as far out as possible).
+     */
     public void setScoringPos() {
         intakeLServo.setPosition(INTAKE_L_MAX);
         intakeRServo.setPosition(INTAKE_R_MAX);
         activated = true;
     }
 
+    /**
+     * Set the acquirer servos to the activated position (to effectively acquire glyphs).
+     */
     public void activate() {
         intakeLServo.setPosition(INTAKE_L_ACT);
         intakeRServo.setPosition(INTAKE_R_ACT);
         activated = true;
     }
 
+    /**
+     * Set the acquirer servos to the initial position.
+     */
     public void deactivate() {
         intakeLServo.setPosition(INTAKE_L_INIT);
         intakeRServo.setPosition(INTAKE_R_INIT);
