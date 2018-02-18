@@ -43,7 +43,7 @@ public class HardwareMain extends Mechanism {
     public Flipper flipper;
 
     /* Miscellaneous mechanisms */
-    ModernRoboticsI2cRangeSensor sensorDistance;
+    private ModernRoboticsI2cRangeSensor sensorDistance;
 
     /**
      * Default constructor for HardwareTank. Instantiates public mechanism instance variables.
