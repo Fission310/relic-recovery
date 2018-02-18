@@ -19,14 +19,14 @@ import static java.lang.Math.abs;
  * Y:               Expel glyphs from intake
  * A:               Toggles between flipping states: acquiring, neutral (set acquirer servos to scoring state), and score
  * B:               Set flipper to acquiring state
- * -Left bumper:    Toggle between relic turn score and neutral states
+ * Left bumper:    Toggle between relic turn score and neutral states
  * -Right bumper:   (slow mode?)
  * Left trigger:    Lower flipper lift
  * Right trigger:   Raise flipper lift
  * DPAD_UP:         Extend relic mechanism
  * DPAD_DOWN:       Retract relic mechanism
- * -DPAD_LEFT:      Toggle relic clamp
- * -DPAD_RIGHT:     Set relic turn to inside robot state
+ * DPAD_LEFT:       Toggle relic clamp
+ * DPAD_RIGHT:     Set relic turn to inside robot state
  * START:           Toggle arm position
  * BACK:            Deactivate acquirer servos
  *
@@ -48,6 +48,8 @@ public class TeleopMain extends OpMode {
     private boolean armState, armDebounce;
     private int flipState;
     private boolean flipDebounce;
+    private boolean clampState, clampDebounce;
+    private boolean turnState, turnDebounce;        // turnState toggles between acquiring (true) and neutral (false) states
 
     /**
      * Runs once when the OpMode is first enabled. The robot's hardware map is initialized.
@@ -63,6 +65,10 @@ public class TeleopMain extends OpMode {
         armDebounce = false;
         flipState = 0;
         flipDebounce = false;
+        clampState = true;
+        clampDebounce = false;
+        turnState = false;
+        turnDebounce = false;
 
     }
 
@@ -108,20 +114,11 @@ public class TeleopMain extends OpMode {
         }
         */
 
-        // Moves slides if dpad up/down is pressed
-        if (gamepad1.dpad_up || gamepad2.dpad_up) {
-            robot.relic.setSlidesPower(1);
-        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
-            robot.relic.setSlidesPower(-1);
-        } else {
-            robot.relic.setSlidesPower(0);
-        }
-
         // Toggles arm from upright and down positions if start or back is pressed
         if (gamepad1.start || gamepad2.start) {
             if (!armDebounce) {
                 armState = !armState;
-                robot.arm.setArmPosition(armState ? 0.1 : 1);
+                robot.arm.armUp();
                 armDebounce = true;
             }
         } else {
@@ -148,36 +145,6 @@ public class TeleopMain extends OpMode {
             flipDebounce = false;
         }
 
-        // Lower and raise flipper lift
-        if (gamepad1.left_trigger > ANALOG_THRESHOLD || gamepad2.left_trigger > ANALOG_THRESHOLD) {
-            double total_left_trigger = gamepad1.left_trigger + gamepad2.left_trigger;
-            robot.flipper.setLiftPower(total_left_trigger > 1 ? gamepad1.left_trigger : total_left_trigger);
-        } else if (gamepad1.right_trigger > ANALOG_THRESHOLD || gamepad2.right_trigger > ANALOG_THRESHOLD) {
-            double total_right_trigger = gamepad1.right_trigger + gamepad2.right_trigger;
-            robot.flipper.setLiftPower(total_right_trigger > 1 ? -gamepad1.right_trigger : -total_right_trigger);
-        }
-
-
-        // Toggles turn servo from up or down positions if a or b is pressed
-        // FIX
-        /*
-        if (gamepad1.a || gamepad2.a) {
-            robot.relic.turnDown();
-        } else if (gamepad1.b || gamepad2.b) {
-            robot.relic.turnInside();
-        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
-            robot.relic.turnInside();
-        }
-
-        // Toggles clamp servo from up or down positions if x or y is pressed
-        // FIX
-        if (gamepad1.right_bumper || gamepad2.right_bumper) {
-            robot.relic.clamp();
-        } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
-            robot.relic.unclamp();
-        }
-        */
-
         // Toggles acquirer
         if (gamepad1.x || gamepad2.x) {
             if (!acquirerDebounce) {
@@ -196,5 +163,59 @@ public class TeleopMain extends OpMode {
         if (gamepad1.back || gamepad2.back) {
             robot.acquirer.deactivate();
         }
+
+        // Lower and raise flipper lift
+        if (gamepad1.left_trigger > ANALOG_THRESHOLD || gamepad2.left_trigger > ANALOG_THRESHOLD) {
+            double total_left_trigger = gamepad1.left_trigger + gamepad2.left_trigger;
+            robot.flipper.setLiftPower(total_left_trigger > 1 ? gamepad1.left_trigger : total_left_trigger);
+        } else if (gamepad1.right_trigger > ANALOG_THRESHOLD || gamepad2.right_trigger > ANALOG_THRESHOLD) {
+            double total_right_trigger = gamepad1.right_trigger + gamepad2.right_trigger;
+            robot.flipper.setLiftPower(total_right_trigger > 1 ? -gamepad1.right_trigger : -total_right_trigger);
+        }
+
+        // Moves slides if dpad up/down is pressed
+        if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            robot.relic.setSlidesPower(1);
+        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
+            robot.relic.setSlidesPower(-1);
+        } else {
+            robot.relic.setSlidesPower(0);
+        }
+
+        // Toggle relic clamp
+        if (gamepad1.dpad_left || gamepad2.dpad_left) {
+            if (!clampDebounce) {
+                clampState = !clampState;
+                if (clampState) {
+                    robot.relic.clamp();
+                } else {
+                    robot.relic.unclamp();
+                }
+                clampDebounce = true;
+            }
+        } else {
+            clampDebounce = false;
+        }
+
+        // Set relic turn states
+        if (gamepad1.left_bumper || gamepad2.left_bumper) {
+            if (!turnDebounce) {
+                turnState = !turnState;
+                if (turnState) {
+                    // acquiring
+                    robot.relic.turnAcq();
+                } else {
+                    // neutral
+                    robot.relic.turnNeutral();
+                }
+                turnDebounce = true;
+            }
+        } else if (gamepad1.dpad_right || gamepad2.dpad_right) {
+            turnState = true;
+            robot.relic.turnInside();
+        } else {
+            turnDebounce = false;
+        }
+        
     }
 }

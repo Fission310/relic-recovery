@@ -53,7 +53,7 @@ public class Relic extends Mechanism {
         slides.setPower(0);
 
         // Set initial position
-        turnDown();
+        turnNeutral();
         clamp();
     }
 
@@ -79,16 +79,16 @@ public class Relic extends Mechanism {
     }
 
     /**
-     * Sets the turn servo to the down position.
+     * Sets the turn servo to the acquiring position.
      */
-    public void turnDown() {
+    public void turnAcq() {
         turn.setPosition(TURN_ACQ_STATE);
     }
 
     /**
-     * Sets the turn servo to the up position.
+     * Sets the turn servo to the neutral position.
      */
-    public void turnUp() {
+    public void turnNeutral() {
         turn.setPosition(TURN_NEUTRAL_STATE);
     }
 

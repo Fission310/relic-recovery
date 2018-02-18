@@ -29,6 +29,8 @@ public class Arm extends Mechanism {
 
     // Hue scale factor
     private static final double SCALE_FACTOR = 255 / 800;
+    public static final double ARM_UP_POS = 0.1;
+    public static final double ARM_DOWN_POS = 1;
 
     /* Hardware members */
     private ColorSensor sensorColor;
@@ -64,11 +66,12 @@ public class Arm extends Mechanism {
         arm.setPosition(1);
     }
 
-    /**
-     * Set servo arm position.
-     */
-    public void setArmPosition(double pos) {
-        arm.setPosition(pos);
+    public void armUp() {
+        arm.setPosition(ARM_UP_POS);
+    }
+
+    public void armDown() {
+        arm.setPosition(ARM_DOWN_POS);
     }
 
     /**

@@ -119,7 +119,7 @@ public class HardwareMain extends Mechanism {
             opMode.telemetry.update();
 
             // Arm should lower to in between the jewels
-            arm.setArmPosition(0);
+            arm.armDown();
 
             // Wait for arm to fully lower
             opMode.sleep(1000);
@@ -132,13 +132,13 @@ public class HardwareMain extends Mechanism {
                 if (isAllianceRed) {
                     // backwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
-                    arm.setArmPosition(1);    // Move the arm back into upright position
+                    arm.armUp();    // Move the arm back into upright position
                     opMode.sleep(1000);
                     return -inchesToDrive;
                 } else {
                     // forwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
-                    arm.setArmPosition(1);
+                    arm.armUp();
                     opMode.sleep(1000);
                     return inchesToDrive;
                 }
@@ -150,20 +150,20 @@ public class HardwareMain extends Mechanism {
                 if (isAllianceRed) {
                     // forwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
-                    arm.setArmPosition(1);
+                    arm.armUp();
                     opMode.sleep(1000);
                     return inchesToDrive;
                 } else {
                     // backwards
                     drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
-                    arm.setArmPosition(1);
+                    arm.armUp();
                     opMode.sleep(1000);
                     return -inchesToDrive;
                 }
             }
 
             // If the hue does not pass the threshold test, move the arm back into upright position
-            arm.setArmPosition(1);
+            arm.armUp();
             opMode.sleep(1000);
             return 0;
         }
