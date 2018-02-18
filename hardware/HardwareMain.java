@@ -41,6 +41,10 @@ public class HardwareMain extends Mechanism {
      * Instance variable containing robot's relic.
      */
     public Relic relic;
+    /**
+     * Instance variable containing robot's flipper.
+     */
+    public Flipper flipper;
 
     /* Miscellaneous mechanisms */
     ModernRoboticsI2cRangeSensor sensorDistance;
@@ -53,6 +57,7 @@ public class HardwareMain extends Mechanism {
         acquirer = new Acquirer();
         arm = new Arm();
         relic = new Relic();
+        flipper = new Flipper();
     }
     /**
      * Overloaded constructor for HardwareTank. Calls the default constructor and sets the OpMode
@@ -66,6 +71,7 @@ public class HardwareMain extends Mechanism {
         acquirer = new Acquirer(opMode);
         arm = new Arm(opMode);
         relic = new Relic(opMode);
+        flipper = new Flipper(opMode);
     }
 
     /**
@@ -77,6 +83,7 @@ public class HardwareMain extends Mechanism {
         acquirer.init(hwMap);
         arm.init(hwMap);
         relic.init(hwMap);
+        flipper.init(hwMap);
 
         // Initialize range sensor
         sensorDistance = hwMap.get(ModernRoboticsI2cRangeSensor.class, RCConfig.RANGE_SENSOR);

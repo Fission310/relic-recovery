@@ -17,22 +17,25 @@ import static java.lang.Math.abs;
  * Right stick x:   Turn robot
  * X:               Turn intake on/off
  * Y:               Expel glyphs from intake
- * -A:              Toggles between flipping states: acquiring, neutral, and score
- * -B:              Set flipper to acquiring state
+ * A:               Toggles between flipping states: acquiring, neutral (set acquirer servos to scoring state), and score
+ * B:               Set flipper to acquiring state
  * -Left bumper:    Toggle between relic turn score and neutral states
  * -Right bumper:   (slow mode?)
- * -Left trigger:   Lower flipper lift
- * -Right trigger:  Raise flipper lift
+ * Left trigger:    Lower flipper lift
+ * Right trigger:   Raise flipper lift
  * DPAD_UP:         Extend relic mechanism
  * DPAD_DOWN:       Retract relic mechanism
  * -DPAD_LEFT:      Toggle relic clamp
  * -DPAD_RIGHT:     Set relic turn to inside robot state
  * START:           Toggle arm position
- * -BACK:
+ * BACK:            Deactivate acquirer servos
  *
  */
 @TeleOp(name = "Teleop: Main", group = "Teleop")
 public class TeleopMain extends OpMode {
+
+    /* CONSTANTS */
+    private static final double ANALOG_THRESHOLD = 0.1;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -43,6 +46,8 @@ public class TeleopMain extends OpMode {
     /* Button debouncing */
     private boolean acquirerState, acquirerDebounce;
     private boolean armState, armDebounce;
+    private int flipState;
+    private boolean flipDebounce;
 
     /**
      * Runs once when the OpMode is first enabled. The robot's hardware map is initialized.
@@ -56,6 +61,9 @@ public class TeleopMain extends OpMode {
         acquirerDebounce = false;
         armState = false;
         armDebounce = false;
+        flipState = 0;
+        flipDebounce = false;
+
     }
 
 
@@ -120,7 +128,39 @@ public class TeleopMain extends OpMode {
             armDebounce = false;
         }
 
+        // Toggles between flipping states: acquiring, neutral (set acquirer servos to scoring state), and score
+        if (gamepad1.a || gamepad2.a) {
+            if (!flipDebounce) {
+                flipState = (flipState + 1) % 3;
+                if (flipState == 0) {
+                    robot.flipper.flipAcq();
+                } else if (flipState == 1) {
+                    robot.acquirer.setScoringPos();
+                    robot.flipper.flipNeutral();
+                } else if (flipState == 2) {
+                    robot.flipper.flipScore();
+                }
+            }
+        } else if (gamepad1.b || gamepad2.b) {
+            flipState = 0;
+            robot.flipper.flipAcq();
+        } else {
+            flipDebounce = false;
+        }
+
+        // Lower and raise flipper lift
+        if (gamepad1.left_trigger > ANALOG_THRESHOLD || gamepad2.left_trigger > ANALOG_THRESHOLD) {
+            double total_left_trigger = gamepad1.left_trigger + gamepad2.left_trigger;
+            robot.flipper.setLiftPower(total_left_trigger > 1 ? gamepad1.left_trigger : total_left_trigger);
+        } else if (gamepad1.right_trigger > ANALOG_THRESHOLD || gamepad2.right_trigger > ANALOG_THRESHOLD) {
+            double total_right_trigger = gamepad1.right_trigger + gamepad2.right_trigger;
+            robot.flipper.setLiftPower(total_right_trigger > 1 ? -gamepad1.right_trigger : -total_right_trigger);
+        }
+
+
         // Toggles turn servo from up or down positions if a or b is pressed
+        // FIX
+        /*
         if (gamepad1.a || gamepad2.a) {
             robot.relic.turnDown();
         } else if (gamepad1.b || gamepad2.b) {
@@ -130,11 +170,13 @@ public class TeleopMain extends OpMode {
         }
 
         // Toggles clamp servo from up or down positions if x or y is pressed
+        // FIX
         if (gamepad1.right_bumper || gamepad2.right_bumper) {
             robot.relic.clamp();
         } else if (gamepad1.left_bumper || gamepad2.left_bumper) {
             robot.relic.unclamp();
         }
+        */
 
         // Toggles acquirer
         if (gamepad1.x || gamepad2.x) {
@@ -148,6 +190,11 @@ public class TeleopMain extends OpMode {
             robot.acquirer.setIntakePower(-1);
         } else {
             acquirerDebounce = false;
+        }
+
+        // Deactivates acquirer servos
+        if (gamepad1.back || gamepad2.back) {
+            robot.acquirer.deactivate();
         }
     }
 }

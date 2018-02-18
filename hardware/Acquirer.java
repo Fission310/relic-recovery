@@ -21,6 +21,8 @@ public class Acquirer extends Mechanism {
     public static final double INTAKE_R_INIT = 0;
     public static final double INTAKE_L_ACT = 0.5;
     public static final double INTAKE_R_ACT = 0.5;
+    public static final double INTAKE_L_MAX = 0.8;
+    public static final double INTAKE_R_MAX = 0.8;
 
     /* Hardware members */
     private DcMotor intakeL;
@@ -71,6 +73,12 @@ public class Acquirer extends Mechanism {
         // Set initial power
         intakeL.setPower(0);
         intakeR.setPower(0);
+    }
+
+    public void setScoringPos() {
+        intakeLServo.setPosition(INTAKE_L_MAX);
+        intakeRServo.setPosition(INTAKE_R_MAX);
+        activated = true;
     }
 
     public void activate() {
