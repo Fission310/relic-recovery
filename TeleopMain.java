@@ -19,14 +19,14 @@ import static java.lang.Math.abs;
  * Y:               Expel glyphs from intake
  * A:               Toggles between flipping states: acquiring, neutral (set acquirer servos to scoring state), and score
  * B:               Set flipper to acquiring state
- * Left bumper:    Toggle between relic turn score and neutral states
- * -Right bumper:   (slow mode?)
+ * Left bumper:     Toggle between relic turn score and neutral states
+ * Right bumper:    Hold for slow mode
  * Left trigger:    Lower flipper lift
  * Right trigger:   Raise flipper lift
  * DPAD_UP:         Extend relic mechanism
  * DPAD_DOWN:       Retract relic mechanism
  * DPAD_LEFT:       Toggle relic clamp
- * DPAD_RIGHT:     Set relic turn to inside robot state
+ * DPAD_RIGHT:      Set relic turn to inside robot state
  * START:           Toggle arm position
  * BACK:            Deactivate acquirer servos
  *
@@ -36,6 +36,7 @@ public class TeleopMain extends OpMode {
 
     /* CONSTANTS */
     private static final double ANALOG_THRESHOLD = 0.1;
+    private static final double SLOW_MULTIPLIER = 0.5;
 
     /* Private OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -99,20 +100,12 @@ public class TeleopMain extends OpMode {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-        // Drives the robot based on driver joystick input
-
-        robot.drivetrain.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-
-        // Clamps acquirer servos if triggers are pressed
-        /*
-        if (abs(gamepad1.left_trigger) > 0.1 || abs(gamepad2.left_trigger) > 0.1) {
-            // Steps up the servo value until the max position is reached.
-            robot.acquirer.clampIncrement(true);
-        } else if (abs(gamepad1.right_trigger) > 0.1 || abs(gamepad2.right_trigger) > 0.1) {
-            // Steps down the servo value until the min position is reached.
-            robot.acquirer.clampIncrement(false);
+        // Drives the robot based on driver joystick input, check for slow mode
+        if (gamepad1.right_bumper || gamepad2.right_bumper) {
+            robot.drivetrain.drive(gamepad1.left_stick_x * SLOW_MULTIPLIER, gamepad1.left_stick_y * SLOW_MULTIPLIER, gamepad1.right_stick_x * SLOW_MULTIPLIER);
+        } else {
+            robot.drivetrain.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         }
-        */
 
         // Toggles arm from upright and down positions if start or back is pressed
         if (gamepad1.start || gamepad2.start) {
@@ -216,6 +209,6 @@ public class TeleopMain extends OpMode {
         } else {
             turnDebounce = false;
         }
-        
+
     }
 }

@@ -19,7 +19,7 @@ public class LegacyAcquirer extends Mechanism {
     /**
      * Amount to change servo position every cycle
      */
-    public static final double INCREMENT = 0.02;
+    private static final double INCREMENT = 0.02;
 
     // Maximum rotational position
     private static final double MAX_POS = 1;

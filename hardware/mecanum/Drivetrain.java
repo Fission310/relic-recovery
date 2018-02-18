@@ -33,19 +33,19 @@ public class Drivetrain extends Mechanism {
     /**
      * Ticks per revolution for a NeverRest 40.
      */
-    public static final double     COUNTS_PER_MOTOR_REV    = 1120;
+    private static final double     COUNTS_PER_MOTOR_REV    = 1120;
     /**
      * Drivetrain gear ratio (< 1.0 if geared up).
      */
-    public static final double     DRIVE_GEAR_REDUCTION    = 1.0;
+    private static final double     DRIVE_GEAR_REDUCTION    = 1.0;
     /**
      * Diameter of wheel in inches.
      */
-    public static final double     WHEEL_DIAMETER_INCHES   = 4.0;
+    private static final double     WHEEL_DIAMETER_INCHES   = 4.0;
     /**
      * Calculated ticks per inch.
      */
-    public static final double     COUNTS_PER_INCH         =
+    private static final double     COUNTS_PER_INCH         =
             (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
     /**
      * Drive speed when using encoders.

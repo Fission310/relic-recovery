@@ -21,16 +21,16 @@ public class Arm extends Mechanism {
     /**
      * Hue threshold for blue jewel.
      */
-    public static final double BLUE = 40;
+    private static final double BLUE = 40;
     /**
      * Hue threshold for red jewel.
      */
-    public static final double RED = 25;
+    private static final double RED = 25;
 
     // Hue scale factor
     private static final double SCALE_FACTOR = 255 / 800;
-    public static final double ARM_UP_POS = 0.1;
-    public static final double ARM_DOWN_POS = 1;
+    private static final double ARM_UP_POS = 0.1;
+    private static final double ARM_DOWN_POS = 1;
 
     /* Hardware members */
     private ColorSensor sensorColor;

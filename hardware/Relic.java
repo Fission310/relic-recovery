@@ -14,11 +14,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Relic extends Mechanism {
 
     /* CONSTANTS */
-    public static final double TURN_INSIDE_STATE = 1;
-    public static final double TURN_NEUTRAL_STATE = 0.45;
-    public static final double TURN_ACQ_STATE = 0;
-    public static final double CLAMP_REL_STATE = 1;
-    public static final double CLAMP_GET_STATE = 0.5;
+    private static final double TURN_INSIDE_STATE = 1;
+    private static final double TURN_NEUTRAL_STATE = 0.45;
+    private static final double TURN_ACQ_STATE = 0;
+    private static final double CLAMP_REL_STATE = 1;
+    private static final double CLAMP_GET_STATE = 0.5;
 
     /* Hardware members */
     private DcMotor slides;

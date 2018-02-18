@@ -9,9 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-// Change depending on Drivetrain used
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain; // Change depending on Drivetrain used
 import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 

@@ -17,12 +17,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Acquirer extends Mechanism {
 
     /* CONSTANTS */
-    public static final double INTAKE_L_INIT = 0;
-    public static final double INTAKE_R_INIT = 0;
-    public static final double INTAKE_L_ACT = 0.5;
-    public static final double INTAKE_R_ACT = 0.5;
-    public static final double INTAKE_L_MAX = 0.8;
-    public static final double INTAKE_R_MAX = 0.8;
+    private static final double INTAKE_L_INIT = 0;
+    private static final double INTAKE_R_INIT = 0;
+    private static final double INTAKE_L_ACT = 0.5;
+    private static final double INTAKE_R_ACT = 0.5;
+    private static final double INTAKE_L_MAX = 0.8;
+    private static final double INTAKE_R_MAX = 0.8;
 
     /* Hardware members */
     private DcMotor intakeL;
