@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
-import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
 
 /**
  * AutonBothSafe is a class containing the following autonomous routine for BOTH alliances:

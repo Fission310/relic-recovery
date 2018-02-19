@@ -29,7 +29,8 @@ public class Arm extends Mechanism {
 
     // Hue scale factor
     private static final double SCALE_FACTOR = 255 / 800;
-    private static final double ARM_UP_POS = 0.1;
+    private static final double ARM_INIT_POS = 0;
+    private static final double ARM_UP_POS = 0.11;
     private static final double ARM_DOWN_POS = 1;
 
     /* Hardware members */
@@ -63,7 +64,14 @@ public class Arm extends Mechanism {
 
         // Retrieve arm from hardware map and set to initial position
         arm = hwMap.servo.get(RCConfig.ARM);
-        arm.setPosition(1);
+        armInit();
+    }
+
+    /**
+     * Set the arm to the init position.
+     */
+    public void armInit() {
+        arm.setPosition(ARM_INIT_POS);
     }
 
     /**

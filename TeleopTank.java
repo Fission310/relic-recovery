@@ -82,9 +82,9 @@ public class TeleopTank extends OpMode {
 
         // Toggles arm from upright and down positions if x or y is pressed
         if (gamepad1.x || gamepad2.x) {
-            robot.arm.getArm().setPosition(0.1);
+            //robot.arm.getArm().setPosition(0.1);
         } else if (gamepad1.y || gamepad2.y) {
-            robot.arm.getArm().setPosition(1);
+            //robot.arm.getArm().setPosition(1);
         }
     }
 }

@@ -17,12 +17,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Acquirer extends Mechanism {
 
     /* CONSTANTS */
-    private static final double INTAKE_L_INIT = 0;
-    private static final double INTAKE_R_INIT = 0;
-    private static final double INTAKE_L_ACT = 0.5;
-    private static final double INTAKE_R_ACT = 0.5;
-    private static final double INTAKE_L_MAX = 0.8;
-    private static final double INTAKE_R_MAX = 0.8;
+    private static final double INTAKE_L_INIT = 0.1;
+    private static final double INTAKE_L_ACT = 0.38;
+    private static final double INTAKE_R_INIT = 0.5;
+    private static final double INTAKE_R_ACT = 0.85;
 
     /* Hardware members */
     private DcMotor intakeL;
@@ -30,9 +28,6 @@ public class Acquirer extends Mechanism {
 
     private Servo intakeLServo;
     private Servo intakeRServo;
-
-    /* State variables */
-    private boolean activated;
 
     /**
      * Default constructor for Acquirer.
@@ -67,7 +62,7 @@ public class Acquirer extends Mechanism {
         intakeR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set polarity
-        intakeL.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeL.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set initial power
@@ -76,39 +71,26 @@ public class Acquirer extends Mechanism {
     }
 
     /**
-     * Set the acquirer servos to the scoring position (as far out as possible).
-     */
-    public void setScoringPos() {
-        intakeLServo.setPosition(INTAKE_L_MAX);
-        intakeRServo.setPosition(INTAKE_R_MAX);
-        activated = true;
-    }
-
-    /**
      * Set the acquirer servos to the activated position (to effectively acquire glyphs).
      */
     public void activate() {
         intakeLServo.setPosition(INTAKE_L_ACT);
         intakeRServo.setPosition(INTAKE_R_ACT);
-        activated = true;
     }
 
     /**
-     * Set the acquirer servos to the initial position.
+     * Set the acquirer servos to the deactivated position (to score glyphs.
      */
     public void deactivate() {
         intakeLServo.setPosition(INTAKE_L_INIT);
         intakeRServo.setPosition(INTAKE_R_INIT);
-        activated = false;
     }
 
     /**
      * Sets power for intake motor.
      */
     public void setIntakePower(double power) {
-        if (!activated) {
-            activate();
-        }
+        activate();
         intakeL.setPower(power);
         intakeR.setPower(power);
     }

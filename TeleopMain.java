@@ -27,7 +27,7 @@ import static java.lang.Math.abs;
  * DPAD_DOWN:       Retract relic mechanism
  * DPAD_LEFT:       Toggle relic clamp
  * DPAD_RIGHT:      Set relic turn to inside robot state
- * START:           Toggle arm position
+ * START:           Set arm position to up
  * BACK:            Deactivate acquirer servos
  *
  */
@@ -46,7 +46,6 @@ public class TeleopMain extends OpMode {
 
     /* Button debouncing */
     private boolean acquirerState, acquirerDebounce;
-    private boolean armState, armDebounce;
     private int flipState;
     private boolean flipDebounce;
     private boolean clampState, clampDebounce;
@@ -62,8 +61,6 @@ public class TeleopMain extends OpMode {
 
         acquirerState = false;
         acquirerDebounce = false;
-        armState = false;
-        armDebounce = false;
         flipState = 0;
         flipDebounce = false;
         clampState = true;
@@ -107,15 +104,9 @@ public class TeleopMain extends OpMode {
             robot.drivetrain.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         }
 
-        // Toggles arm from upright and down positions if start or back is pressed
+        // Set arm position to up
         if (gamepad1.start || gamepad2.start) {
-            if (!armDebounce) {
-                armState = !armState;
-                robot.arm.armUp();
-                armDebounce = true;
-            }
-        } else {
-            armDebounce = false;
+            robot.arm.armUp();
         }
 
         // Toggles between flipping states: acquiring, neutral (set acquirer servos to scoring state), and score
@@ -125,11 +116,12 @@ public class TeleopMain extends OpMode {
                 if (flipState == 0) {
                     robot.flipper.flipAcq();
                 } else if (flipState == 1) {
-                    robot.acquirer.setScoringPos();
+                    robot.acquirer.deactivate();
                     robot.flipper.flipNeutral();
                 } else if (flipState == 2) {
                     robot.flipper.flipScore();
                 }
+                flipDebounce = true;
             }
         } else if (gamepad1.b || gamepad2.b) {
             flipState = 0;
@@ -164,6 +156,8 @@ public class TeleopMain extends OpMode {
         } else if (gamepad1.right_trigger > ANALOG_THRESHOLD || gamepad2.right_trigger > ANALOG_THRESHOLD) {
             double total_right_trigger = gamepad1.right_trigger + gamepad2.right_trigger;
             robot.flipper.setLiftPower(total_right_trigger > 1 ? -gamepad1.right_trigger : -total_right_trigger);
+        } else {
+            robot.flipper.setLiftPower(0);
         }
 
         // Moves slides if dpad up/down is pressed

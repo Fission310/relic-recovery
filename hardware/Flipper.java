@@ -16,11 +16,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Flipper extends Mechanism {
 
     /* CONSTANTS */
-    private static final double FLIP_L_ACQ_STATE =      0;
+    private static final double FLIP_L_ACQ_STATE =      1;
     private static final double FLIP_R_ACQ_STATE =      1 - FLIP_L_ACQ_STATE;
-    private static final double FLIP_L_NEUTRAL_STATE =  0.2;
+    private static final double FLIP_L_NEUTRAL_STATE =  0.5;
     private static final double FLIP_R_NEUTRAL_STATE =  1 - FLIP_L_NEUTRAL_STATE;
-    private static final double FLIP_L_SCORE_STATE =    0.7;
+    private static final double FLIP_L_SCORE_STATE =    0;
     private static final double FLIP_R_SCORE_STATE =    1 - FLIP_L_SCORE_STATE;
 
     /* Hardware members */

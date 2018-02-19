@@ -17,7 +17,7 @@
             <NeveRest40Gearmotor name="intakeRMotor" port="2" />
             <NeveRest40Gearmotor name="slides" port="3" />
             <Servo name="intakeLServo" port="0" />
-            <Servo name="intakeRServo" port="1" />
+            <Servo name="intakeRServo" port="5" />
             <Servo name="flipLeft" port="2" />
             <Servo name="flipRight" port="3" />
             <ModernRoboticsI2cRangeSensor name="sensor_range" port="0" bus="2" />
