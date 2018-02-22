@@ -83,6 +83,7 @@ public class AutonVuMark extends LinearOpMode {
             visionManager.vuforiaStop();
 
             // Align with wall
+            robot.align(10);
 
             // Run glyph scoring action
             robot.scoreGlyph(key, 10);

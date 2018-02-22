@@ -90,10 +90,10 @@ public class HardwareMain extends Mechanism {
      * and moves forwards or backwards accordingly.
      * This assumes the color sensor faces the front of the bot.
      *
+     *  @param visionManager    VisionManager containing the JewelDetector
      *  @param isAllianceRed    whether or not the robot is on the Red Alliance
-     *  @return                 number of inches moved, with respect to the original position
      */
-    public int jewel(VisionManager visionManager, boolean isAllianceRed) {
+    public void jewel(VisionManager visionManager, boolean isAllianceRed) {
 
         // Run only if opMode is not stopped
         if (opMode.opModeIsActive()) {
@@ -101,15 +101,15 @@ public class HardwareMain extends Mechanism {
             // Get test hue values and update telemetry
             float[] hsvValues;
 
-            // Number of inches of driving required to knock the jewel off
-            int inchesToDrive = 10;
+            // Number of degrees of turning required to knock the jewel off
+            int degToTurn = 30;
 
             // Get hue values to use
             // hsvValues = arm.getHSVValues();
             // opMode.telemetry.addData("HSV: ", hsvValues[0]);
             // opMode.telemetry.update();
             // opMode.sleep(1000);
-            opMode.sleep(3000);
+            opMode.sleep(2000);
             JewelDetector.JewelOrder jewelOrder = visionManager.getJewelOrder();
             opMode.telemetry.addData("Order: ", jewelOrder);
             opMode.telemetry.update();
@@ -120,51 +120,38 @@ public class HardwareMain extends Mechanism {
             // Wait for arm to fully lower
             opMode.sleep(1000);
 
-
-            // Checks if hue value is greater than a threshold value indicating blue
-            if (jewelOrder.equals(JewelDetector.JewelOrder.BLUE_RED)) {
-
-                // Moves forwards or backwards based on alliance color
-                if (isAllianceRed) {
-                    // backwards
-                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
-                    arm.armUp();    // Move the arm back into upright position
-                    opMode.sleep(1000);
-                    return -inchesToDrive;
-                } else {
-                    // forwards
-                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
-                    arm.armUp();
-                    opMode.sleep(1000);
-                    return inchesToDrive;
-                }
-            }
-            // Checks if hue value is less than a threshold value indicating red
-            else if (jewelOrder.equals(JewelDetector.JewelOrder.RED_BLUE)) {
-
-                // Moves forwards or backwards based on alliance color
-                if (isAllianceRed) {
-                    // forwards
-                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -inchesToDrive, -inchesToDrive, 2);
-                    arm.armUp();
-                    opMode.sleep(1000);
-                    return inchesToDrive;
-                } else {
-                    // backwards
-                    drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, inchesToDrive, inchesToDrive, 2);
-                    arm.armUp();
-                    opMode.sleep(1000);
-                    return -inchesToDrive;
+            int initialDirection = 1;
+            if (!jewelOrder.equals(JewelDetector.JewelOrder.UNKNOWN)) {
+                if ((jewelOrder.equals(JewelDetector.JewelOrder.BLUE_RED) && isAllianceRed) || (jewelOrder.equals(JewelDetector.JewelOrder.RED_BLUE) && !isAllianceRed)) {
+                    initialDirection = -1;
                 }
             }
 
-            // If the hue does not pass the threshold test, move the arm back into upright position
-            arm.armUp();
+            drivetrain.turn(Drivetrain.TURN_SPEED, initialDirection * degToTurn, 2);
+            arm.armUp();    // Move the arm back into upright position
             opMode.sleep(1000);
-            return 0;
+            drivetrain.turn(Drivetrain.TURN_SPEED, -initialDirection * degToTurn, 2);
+
         }
 
-        return 0;
+    }
+
+    /**
+     * Autonomous action for aligning a robot with the wall when leaving the balancing stone. Uses
+     * the robot's distance sensor to detect the robot's position using the cryptobox wall.
+     * @param distanceToWall  distance the robot should be from the wall in CM
+     */
+    public void align(int distanceToWall) {
+        double wallDistance = sensorDistance.getDistance(DistanceUnit.CM);
+
+        while (opMode.opModeIsActive() && wallDistance < distanceToWall) {
+            drivetrain.drive(0, Drivetrain.DRIVE_SPEED, 0);
+        }
+
+        drivetrain.drive(-Drivetrain.DRIVE_SPEED, 0, 0);
+        opMode.sleep(2000);
+        drivetrain.drive(0, 0, 0);
+
     }
 
 
@@ -174,7 +161,8 @@ public class HardwareMain extends Mechanism {
      * reached.
      * This assumes the distance sensor faces the cryptobox wall.
      *
-     *  @param targetCol    the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
+     *  @param targetCol      the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
+     *  @param distanceToWall distance the robot should be from the wall in CM
      */
     public void scoreGlyph(int targetCol, int distanceToWall) {
         while (opMode.opModeIsActive()) {
@@ -193,7 +181,7 @@ public class HardwareMain extends Mechanism {
                 }
 
                 // use IMU to stay parallel to wall if necessary
-                drivetrain.drive(0.5, (distanceToWall - boxDistance) / 10, 0);
+                drivetrain.drive(Drivetrain.DRIVE_SPEED, (distanceToWall - boxDistance) / 10, 0);
             }
 
             drivetrain.drive(0, 0, 0);
@@ -208,7 +196,7 @@ public class HardwareMain extends Mechanism {
             runtime.reset();
 
             while (boxDistance < 5 && runtime.seconds() < 3) {
-                drivetrain.drive(0, 0.5, 0);
+                drivetrain.drive(0, Drivetrain.DRIVE_SPEED, 0);
             }
 
             drivetrain.drive(0, 0, 0);

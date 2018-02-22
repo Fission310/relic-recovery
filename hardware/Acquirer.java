@@ -17,20 +17,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Acquirer extends Mechanism {
 
     /* CONSTANTS */
-    private static final double INTAKE_L_INIT = 0.05;
-    private static final double INTAKE_L_ACT = 0.35;
-    private static final double INTAKE_R_INIT = 0;
-    private static final double INTAKE_R_ACT = 1;
-    private static final double INTAKE_PUSHER_NEUTRAL = 0;
-    private static final double INTAKE_PUSHER_IN = 0.3;
 
     /* Hardware members */
     private DcMotor intakeL;
     private DcMotor intakeR;
-
-    private Servo intakeLServo;
-    private Servo intakeRServo;
-    private Servo intakePusher;
 
     /**
      * Default constructor for Acquirer.
@@ -53,9 +43,6 @@ public class Acquirer extends Mechanism {
      */
     public void init(HardwareMap hwMap) {
         // Retrieve servos from hardware map and assign to instance vars
-        intakeLServo = hwMap.servo.get(RCConfig.INTAKE_L_SERVO);
-        intakeRServo = hwMap.servo.get(RCConfig.INTAKE_R_SERVO);
-        intakePusher = hwMap.servo.get(RCConfig.INTAKE_PUSHER);
 
         // Retrieve motor from hardware map and assign to instance vars
         intakeL = hwMap.dcMotor.get(RCConfig.INTAKE_L_MOTOR);
@@ -75,34 +62,9 @@ public class Acquirer extends Mechanism {
     }
 
     /**
-     * Set the acquirer servos to the activated position (to effectively acquire glyphs).
-     */
-    public void activate() {
-        intakeLServo.setPosition(INTAKE_L_ACT);
-        intakeRServo.setPosition(INTAKE_R_ACT);
-    }
-
-    /**
-     * Set the acquirer servos to the deactivated position (to score glyphs.
-     */
-    public void deactivate() {
-        intakeLServo.setPosition(INTAKE_L_INIT);
-        intakeRServo.setPosition(INTAKE_R_INIT);
-    }
-
-    public void pushGlyphs() {
-        intakePusher.setPosition(INTAKE_PUSHER_IN);
-    }
-
-    public void releaseGlyphs() {
-        intakePusher.setPosition(INTAKE_PUSHER_NEUTRAL);
-    }
-
-    /**
      * Sets power for intake motor.
      */
     public void setIntakePower(double power) {
-        activate();
         intakeL.setPower(power);
         intakeR.setPower(power);
     }

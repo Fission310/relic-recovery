@@ -20,7 +20,6 @@
             <Servo name="intakeRServo" port="5" />
             <Servo name="flipLeft" port="2" />
             <Servo name="flipRight" port="3" />
-            <Servo name="intakePusher" port="1" />
             <ModernRoboticsI2cRangeSensor name="sensor_range" port="0" bus="2" />
         </LynxModule>
     </LynxUsbDevice>

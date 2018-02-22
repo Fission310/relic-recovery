@@ -17,8 +17,8 @@ import static java.lang.Math.abs;
  * Right stick x:   Turn robot
  * X:               Turn intake on/off
  * Y:               Expel glyphs from intake
- * A:               Toggles between flipping states: acquiring, neutral (set acquirer servos to scoring state), and score
- * B:               Set flipper to acquiring state
+ * A:               Toggles between flipping states: neutral and score
+ * B:
  * Left bumper:     Toggle between relic turn score and neutral states
  * Right bumper:    Hold for slow mode
  * Left trigger:    Lower flipper lift
@@ -28,7 +28,7 @@ import static java.lang.Math.abs;
  * DPAD_LEFT:       Toggle relic clamp
  * DPAD_RIGHT:      Set relic turn to inside robot state
  * START:           Set arm position to up
- * BACK:            Toggle intake pusher position
+ * BACK:
  *
  */
 @TeleOp(name = "Teleop: Main", group = "Teleop")
@@ -46,11 +46,9 @@ public class TeleopMain extends OpMode {
 
     /* Button debouncing */
     private boolean acquirerState, acquirerDebounce;
-    private int flipState;
-    private boolean flipDebounce;
+    private boolean flipState, flipDebounce;
     private boolean clampState, clampDebounce;
     private boolean turnState, turnDebounce;        // turnState toggles between acquiring (true) and neutral (false) states
-    private boolean pusherState, pusherDebounce;
 
     /**
      * Runs once when the OpMode is first enabled. The robot's hardware map is initialized.
@@ -62,14 +60,12 @@ public class TeleopMain extends OpMode {
 
         acquirerState = false;
         acquirerDebounce = false;
-        flipState = 0;
+        flipState = false;
         flipDebounce = false;
         clampState = true;
         clampDebounce = false;
         turnState = false;
         turnDebounce = false;
-        pusherState = false;
-        pusherDebounce = false;
 
     }
 
@@ -112,23 +108,17 @@ public class TeleopMain extends OpMode {
             robot.arm.armUp();
         }
 
-        // Toggles between flipping states: acquiring, neutral (set acquirer servos to scoring state), and score
+        // Toggles between flipping states: neutral and score
         if (gamepad1.a || gamepad2.a) {
             if (!flipDebounce) {
-                flipState = (flipState + 1) % 3;
-                if (flipState == 0) {
-                    robot.flipper.flipAcq();
-                } else if (flipState == 1) {
-                    robot.acquirer.deactivate();
-                    robot.flipper.flipNeutral();
-                } else if (flipState == 2) {
+                flipState = !flipState;
+                if (flipState) {
                     robot.flipper.flipScore();
+                } else {
+                    robot.flipper.flipNeutral();
                 }
                 flipDebounce = true;
             }
-        } else if (gamepad1.b || gamepad2.b) {
-            flipState = 0;
-            robot.flipper.flipAcq();
         } else {
             flipDebounce = false;
         }
@@ -145,21 +135,6 @@ public class TeleopMain extends OpMode {
             robot.acquirer.setIntakePower(-1);
         } else {
             acquirerDebounce = false;
-        }
-
-        // Toggles intake pusher servo
-        if (gamepad1.back || gamepad2.back) {
-            if (!pusherDebounce) {
-                pusherState = !pusherState;
-                if (pusherState) {
-                    robot.acquirer.pushGlyphs();
-                } else {
-                    robot.acquirer.releaseGlyphs();
-                }
-                pusherDebounce = true;
-            } else {
-                pusherDebounce = false;
-            }
         }
 
         // Lower and raise flipper lift

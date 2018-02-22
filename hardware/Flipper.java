@@ -16,8 +16,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Flipper extends Mechanism {
 
     /* CONSTANTS */
-    private static final double FLIP_L_ACQ_STATE =      0.8;
-    private static final double FLIP_R_ACQ_STATE =      1 - FLIP_L_ACQ_STATE;
     private static final double FLIP_L_NEUTRAL_STATE =  0.6;
     private static final double FLIP_R_NEUTRAL_STATE =  1 - FLIP_L_NEUTRAL_STATE;
     private static final double FLIP_L_SCORE_STATE =    0;
@@ -62,15 +60,7 @@ public class Flipper extends Mechanism {
         lift.setPower(0);
 
         // Set initial flipper position
-        flipAcq();
-    }
-
-    /**
-     * Set the flipper ramp to the acquiring position.
-     */
-    public void flipAcq() {
-        flipL.setPosition(FLIP_L_ACQ_STATE);
-        flipR.setPosition(FLIP_R_ACQ_STATE);
+        flipNeutral();
     }
 
     /**
