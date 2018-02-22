@@ -18,7 +18,7 @@ public class Relic extends Mechanism {
     private static final double TURN_NEUTRAL_STATE = 0.45;
     private static final double TURN_ACQ_STATE = 0;
     private static final double CLAMP_REL_STATE = 1;
-    private static final double CLAMP_GET_STATE = 0.5;
+    private static final double CLAMP_GET_STATE = 0.3;
 
     /* Hardware members */
     private DcMotor slides;
@@ -53,7 +53,7 @@ public class Relic extends Mechanism {
         slides.setPower(0);
 
         // Set initial position
-        turnNeutral();
+        turnInside();
         clamp();
     }
 

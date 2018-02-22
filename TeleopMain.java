@@ -28,7 +28,7 @@ import static java.lang.Math.abs;
  * DPAD_LEFT:       Toggle relic clamp
  * DPAD_RIGHT:      Set relic turn to inside robot state
  * START:           Set arm position to up
- * BACK:            Deactivate acquirer servos
+ * BACK:            Toggle intake pusher position
  *
  */
 @TeleOp(name = "Teleop: Main", group = "Teleop")
@@ -50,6 +50,7 @@ public class TeleopMain extends OpMode {
     private boolean flipDebounce;
     private boolean clampState, clampDebounce;
     private boolean turnState, turnDebounce;        // turnState toggles between acquiring (true) and neutral (false) states
+    private boolean pusherState, pusherDebounce;
 
     /**
      * Runs once when the OpMode is first enabled. The robot's hardware map is initialized.
@@ -67,6 +68,8 @@ public class TeleopMain extends OpMode {
         clampDebounce = false;
         turnState = false;
         turnDebounce = false;
+        pusherState = false;
+        pusherDebounce = false;
 
     }
 
@@ -144,9 +147,19 @@ public class TeleopMain extends OpMode {
             acquirerDebounce = false;
         }
 
-        // Deactivates acquirer servos
+        // Toggles intake pusher servo
         if (gamepad1.back || gamepad2.back) {
-            robot.acquirer.deactivate();
+            if (!pusherDebounce) {
+                pusherState = !pusherState;
+                if (pusherState) {
+                    robot.acquirer.pushGlyphs();
+                } else {
+                    robot.acquirer.releaseGlyphs();
+                }
+                pusherDebounce = true;
+            } else {
+                pusherDebounce = false;
+            }
         }
 
         // Lower and raise flipper lift

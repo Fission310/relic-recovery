@@ -30,7 +30,7 @@ public class Arm extends Mechanism {
     // Hue scale factor
     private static final double SCALE_FACTOR = 255 / 800;
     private static final double ARM_INIT_POS = 0;
-    private static final double ARM_UP_POS = 0.11;
+    private static final double ARM_UP_POS = 0.2;
     private static final double ARM_DOWN_POS = 1;
 
     /* Hardware members */

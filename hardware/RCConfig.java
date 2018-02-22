@@ -23,6 +23,7 @@ public class RCConfig {
     public static final String FLIP_R = "flipRight";
     public static final String INTAKE_L_SERVO = "intakeLServo";
     public static final String INTAKE_R_SERVO = "intakeRServo";
+    public static final String INTAKE_PUSHER = "intakePusher";
 
     // I2C
     public static final String IMU = "imu";

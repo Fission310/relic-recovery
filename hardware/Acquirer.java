@@ -17,10 +17,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Acquirer extends Mechanism {
 
     /* CONSTANTS */
-    private static final double INTAKE_L_INIT = 0.1;
-    private static final double INTAKE_L_ACT = 0.38;
-    private static final double INTAKE_R_INIT = 0.5;
-    private static final double INTAKE_R_ACT = 0.85;
+    private static final double INTAKE_L_INIT = 0.05;
+    private static final double INTAKE_L_ACT = 0.35;
+    private static final double INTAKE_R_INIT = 0;
+    private static final double INTAKE_R_ACT = 1;
+    private static final double INTAKE_PUSHER_NEUTRAL = 0;
+    private static final double INTAKE_PUSHER_IN = 0.3;
 
     /* Hardware members */
     private DcMotor intakeL;
@@ -28,6 +30,7 @@ public class Acquirer extends Mechanism {
 
     private Servo intakeLServo;
     private Servo intakeRServo;
+    private Servo intakePusher;
 
     /**
      * Default constructor for Acquirer.
@@ -52,6 +55,7 @@ public class Acquirer extends Mechanism {
         // Retrieve servos from hardware map and assign to instance vars
         intakeLServo = hwMap.servo.get(RCConfig.INTAKE_L_SERVO);
         intakeRServo = hwMap.servo.get(RCConfig.INTAKE_R_SERVO);
+        intakePusher = hwMap.servo.get(RCConfig.INTAKE_PUSHER);
 
         // Retrieve motor from hardware map and assign to instance vars
         intakeL = hwMap.dcMotor.get(RCConfig.INTAKE_L_MOTOR);
@@ -84,6 +88,14 @@ public class Acquirer extends Mechanism {
     public void deactivate() {
         intakeLServo.setPosition(INTAKE_L_INIT);
         intakeRServo.setPosition(INTAKE_R_INIT);
+    }
+
+    public void pushGlyphs() {
+        intakePusher.setPosition(INTAKE_PUSHER_IN);
+    }
+
+    public void releaseGlyphs() {
+        intakePusher.setPosition(INTAKE_PUSHER_NEUTRAL);
     }
 
     /**

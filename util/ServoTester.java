@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name="Util: Servo Test", group="Util")
 public class ServoTester extends LinearOpMode {
 
-    private static final String CONFIG_NAME = "arm";
+    private static final String CONFIG_NAME = "turn";
 
     private Servo testServo;
 
