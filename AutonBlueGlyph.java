@@ -1,21 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
 import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
 
 /**
- * AutonBothSafe is a class containing the following autonomous routine for BOTH alliances:
+ * AutonBlueGlyph is a class containing the following autonomous routine for the BLUE alliance:
  * <ol>
- *   <li>Drive straight and park in safe zone</li>
+ *   <li>Score glyph into cryptobox</li>
+ *   <li>Park in safe zone</li>
  * </ol>
  */
-@Autonomous(name="Auton: Both Safe", group="Auton")
-@Disabled
-public class AutonBothSafe extends LinearOpMode {
+@Autonomous(name="Auton: Blue Glyph", group="Auton")
+public class AutonBlueGlyph extends LinearOpMode {
 
     /* Robot hardware */
     private HardwareMain robot = new HardwareMain(this);
@@ -32,7 +31,7 @@ public class AutonBothSafe extends LinearOpMode {
 
         // Wait until we're told to go
         waitForStart();
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 48, 48, 5.0);
+        robot.scoreGlyph(1, false);
 
         // Note: can extend arm at end to ensure safe zone park
 

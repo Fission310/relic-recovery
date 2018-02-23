@@ -31,11 +31,15 @@ public class Arm extends Mechanism {
     private static final double SCALE_FACTOR = 255 / 800;
     private static final double ARM_INIT_POS = 0;
     private static final double ARM_UP_POS = 0.2;
-    private static final double ARM_DOWN_POS = 1;
+    private static final double ARM_DOWN_POS = 0.8;
+    private static final double SWEEPER_LEFT_POS = 0.2;
+    private static final double SWEEPER_NEUTRAL_POS = 0.5;
+    private static final double SWEEPER_RIGHT_POS = 0.8;
 
     /* Hardware members */
     private ColorSensor sensorColor;
     private Servo arm;
+    private Servo sweeper;
 
 
     /**
@@ -64,7 +68,9 @@ public class Arm extends Mechanism {
 
         // Retrieve arm from hardware map and set to initial position
         arm = hwMap.servo.get(RCConfig.ARM);
+        sweeper = hwMap.servo.get(RCConfig.SWEEPER);
         armInit();
+        sweeperNeutral();
     }
 
     /**
@@ -86,6 +92,27 @@ public class Arm extends Mechanism {
      */
     public void armDown() {
         arm.setPosition(ARM_DOWN_POS);
+    }
+
+    /**
+     * Set the sweeper to the left position.
+     */
+    public void sweeperLeft() {
+        sweeper.setPosition(SWEEPER_LEFT_POS);
+    }
+
+    /**
+     * Set the sweeper to the neutral position.
+     */
+    public void sweeperNeutral() {
+        sweeper.setPosition(SWEEPER_NEUTRAL_POS);
+    }
+
+    /**
+     * Set the sweeper to the right position.
+     */
+    public void sweeperRight() {
+        sweeper.setPosition(SWEEPER_RIGHT_POS);
     }
 
     /**

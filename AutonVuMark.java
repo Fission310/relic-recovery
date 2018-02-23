@@ -80,13 +80,12 @@ public class AutonVuMark extends LinearOpMode {
                 key = visionManager.getKey();
             }
 
+            telemetry.addData("Key:", key);
+            telemetry.update();
             visionManager.vuforiaStop();
 
-            // Align with wall
-            robot.align(10);
-
             // Run glyph scoring action
-            robot.scoreGlyph(key, 10);
+            robot.scoreGlyph(key, true);
 
         }
     }

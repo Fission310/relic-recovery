@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
 import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
+import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 /**
  * AutonBlueJewelGlyph is a class containing the following autonomous routine for the BLUE alliance:
@@ -30,23 +31,42 @@ public class AutonBlueJewelGlyph extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        // Initialize CV
+        VisionManager visionManager = new VisionManager();
+        visionManager.vuforiaInit(hardwareMap);
+
         // Initialize robot
         robot.init(hardwareMap);
+        robot.drivetrain.encoderInit();
 
         // Wait until we're told to go
         waitForStart();
 
-        // Score jewel
-//        double inches = robot.jewel(false);
-//        telemetry.addData("Movement: ", inches);
-//        telemetry.update();
-//        sleep(1000);
+        int key = -1;
+        while (opModeIsActive() && key == -1) {
+            key = visionManager.getKey();
+        }
 
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 10, 10, 5);
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 10, 10, 5);
-        robot.drivetrain.turn(Drivetrain.TURN_SPEED, 90, 5);
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -48, -48, 5);
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 24, 24, 5);
+        telemetry.addData("Key:", key);
+        telemetry.update();
+        visionManager.vuforiaStop();
+
+        visionManager.jewelInit(hardwareMap);
+
+        // Score jewel
+        robot.jewel(visionManager, true);
+        sleep(1000);
+
+        // Score glyph
+        robot.scoreGlyph(key, false);
+
+        sleep(1000);
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+
+        // Stop CV
+        visionManager.jewelStop();
 
     }
 

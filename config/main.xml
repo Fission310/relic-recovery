@@ -9,6 +9,7 @@
             <Servo name="turn" port="0" />
             <Servo name="clamp" port="1" />
             <Servo name="arm" port="2" />
+            <Servo name="sweeper" port="3" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
         </LynxModule>
         <LynxModule name="Expansion Hub 3" port="3">

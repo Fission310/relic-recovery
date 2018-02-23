@@ -21,9 +21,7 @@ public class RCConfig {
     public static final String ARM = "arm";
     public static final String FLIP_L = "flipLeft";
     public static final String FLIP_R = "flipRight";
-    public static final String INTAKE_L_SERVO = "intakeLServo";
-    public static final String INTAKE_R_SERVO = "intakeRServo";
-    public static final String INTAKE_PUSHER = "intakePusher";
+    public static final String SWEEPER = "sweeper";
 
     // I2C
     public static final String IMU = "imu";

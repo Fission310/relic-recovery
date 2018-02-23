@@ -98,39 +98,28 @@ public class HardwareMain extends Mechanism {
         // Run only if opMode is not stopped
         if (opMode.opModeIsActive()) {
 
-            // Get test hue values and update telemetry
-            float[] hsvValues;
-
-            // Number of degrees of turning required to knock the jewel off
-            int degToTurn = 30;
-
-            // Get hue values to use
-            // hsvValues = arm.getHSVValues();
-            // opMode.telemetry.addData("HSV: ", hsvValues[0]);
-            // opMode.telemetry.update();
-            // opMode.sleep(1000);
             opMode.sleep(2000);
             JewelDetector.JewelOrder jewelOrder = visionManager.getJewelOrder();
             opMode.telemetry.addData("Order: ", jewelOrder);
             opMode.telemetry.update();
 
             // Arm should lower to in between the jewels
+            arm.sweeperNeutral();
             arm.armDown();
 
             // Wait for arm to fully lower
             opMode.sleep(1000);
 
-            int initialDirection = 1;
             if (!jewelOrder.equals(JewelDetector.JewelOrder.UNKNOWN)) {
                 if ((jewelOrder.equals(JewelDetector.JewelOrder.BLUE_RED) && isAllianceRed) || (jewelOrder.equals(JewelDetector.JewelOrder.RED_BLUE) && !isAllianceRed)) {
-                    initialDirection = -1;
+                    arm.sweeperLeft();
+                } else {
+                    arm.sweeperRight();
                 }
             }
 
-            drivetrain.turn(Drivetrain.TURN_SPEED, initialDirection * degToTurn, 2);
             arm.armUp();    // Move the arm back into upright position
             opMode.sleep(1000);
-            drivetrain.turn(Drivetrain.TURN_SPEED, -initialDirection * degToTurn, 2);
 
         }
 
@@ -140,15 +129,17 @@ public class HardwareMain extends Mechanism {
      * Autonomous action for aligning a robot with the wall when leaving the balancing stone. Uses
      * the robot's distance sensor to detect the robot's position using the cryptobox wall.
      * @param distanceToWall  distance the robot should be from the wall in CM
+     * @param isAllianceRed   whether or not the robot is on the Red Alliance
      */
-    public void align(int distanceToWall) {
+    public void align(int distanceToWall, boolean isAllianceRed) {
         double wallDistance = sensorDistance.getDistance(DistanceUnit.CM);
+        double direction = isAllianceRed ? 1 : -1;
 
         while (opMode.opModeIsActive() && wallDistance < distanceToWall) {
             drivetrain.drive(0, Drivetrain.DRIVE_SPEED, 0);
         }
 
-        drivetrain.drive(-Drivetrain.DRIVE_SPEED, 0, 0);
+        drivetrain.drive(-direction * Drivetrain.DRIVE_SPEED, 0, 0);
         opMode.sleep(2000);
         drivetrain.drive(0, 0, 0);
 
@@ -162,9 +153,13 @@ public class HardwareMain extends Mechanism {
      * This assumes the distance sensor faces the cryptobox wall.
      *
      *  @param targetCol      the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
-     *  @param distanceToWall distance the robot should be from the wall in CM
+     *  @param isAllianceRed    whether or not the robot is on the Red Alliance
      */
-    public void scoreGlyph(int targetCol, int distanceToWall) {
+    public void scoreGlyph(int targetCol, boolean isAllianceRed) {
+
+        /*
+        double direction = isAllianceRed ? 1 : -1;
+
         while (opMode.opModeIsActive()) {
             // Number of cryptobox walls detected
             int wallsDetected = -1;
@@ -181,7 +176,7 @@ public class HardwareMain extends Mechanism {
                 }
 
                 // use IMU to stay parallel to wall if necessary
-                drivetrain.drive(Drivetrain.DRIVE_SPEED, (distanceToWall - boxDistance) / 10, 0);
+                drivetrain.drive(direction * Drivetrain.DRIVE_SPEED, (distanceToWall - boxDistance) / 10, 0);
             }
 
             drivetrain.drive(0, 0, 0);
@@ -201,8 +196,20 @@ public class HardwareMain extends Mechanism {
 
             drivetrain.drive(0, 0, 0);
         }
+        */
+
+        int direction = isAllianceRed ? 1 : -1;
+        relic.turnNeutral();
+        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 24, 24, 5.0);
+        drivetrain.turn(Drivetrain.TURN_SPEED, direction * 90, 10);
+        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 6*(targetCol+1), 6*(targetCol+1), 5.0);
+        drivetrain.turn(Drivetrain.TURN_SPEED, direction * 90, 10);
+        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -12, -12, 5.0);
+        flipper.flipScore();
+        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 6, 6, 2.0);
+        flipper.flipNeutral();
 
     }
 
- }
+}
 

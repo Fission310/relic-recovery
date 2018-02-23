@@ -35,7 +35,7 @@ import static java.lang.Math.abs;
 public class TeleopMain extends OpMode {
 
     /* CONSTANTS */
-    private static final double ANALOG_THRESHOLD = 0.1;
+    private static final double ANALOG_THRESHOLD = 0.2;
     private static final double SLOW_MULTIPLIER = 0.5;
 
     /* Private OpMode members. */
@@ -56,8 +56,6 @@ public class TeleopMain extends OpMode {
      */
     @Override
     public void init() {
-        robot.init(hardwareMap);
-
         acquirerState = false;
         acquirerDebounce = false;
         flipState = false;
@@ -83,6 +81,8 @@ public class TeleopMain extends OpMode {
      */
     @Override
     public void start() {
+        robot.init(hardwareMap);
+        robot.drivetrain.encoderInit();
         runtime.reset();
     }
 
@@ -96,11 +96,16 @@ public class TeleopMain extends OpMode {
         // Adds runtime data to telemetry
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
+        // Threshold for strafing, makes horizontal strafing easier
+        double yInput = gamepad1.left_stick_y;
+        if (abs(gamepad1.left_stick_y) < ANALOG_THRESHOLD) {
+            yInput = 0;
+        }
         // Drives the robot based on driver joystick input, check for slow mode
         if (gamepad1.right_bumper || gamepad2.right_bumper) {
-            robot.drivetrain.drive(gamepad1.left_stick_x * SLOW_MULTIPLIER, gamepad1.left_stick_y * SLOW_MULTIPLIER, gamepad1.right_stick_x * SLOW_MULTIPLIER);
+            robot.drivetrain.drive(gamepad1.left_stick_x * SLOW_MULTIPLIER, yInput * SLOW_MULTIPLIER, gamepad1.right_stick_x * SLOW_MULTIPLIER);
         } else {
-            robot.drivetrain.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            robot.drivetrain.drive(gamepad1.left_stick_x, yInput, gamepad1.right_stick_x);
         }
 
         // Set arm position to up
@@ -191,6 +196,13 @@ public class TeleopMain extends OpMode {
         } else {
             turnDebounce = false;
         }
+
+        double[] positions = robot.drivetrain.getPositions();
+        telemetry.addData("Path2", "Running at %.2f :%.2f :%.2f :%.2f",
+                positions[0],
+                positions[1],
+                positions[2],
+                positions[3]);
 
     }
 }

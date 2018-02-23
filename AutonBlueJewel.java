@@ -39,9 +39,7 @@ public class AutonBlueJewel extends LinearOpMode {
         waitForStart();
 
         // Score jewel
-        double inches = robot.jewel(visionManager, false);
-        telemetry.addData("Movement: ", inches);
-        telemetry.update();
+        robot.jewel(visionManager, false);
         sleep(1000);
 
         // Stop CV
