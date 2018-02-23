@@ -1,20 +1,23 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
+import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 /**
- * AutonBlueJewel is a class containing the following autonomous routine for the BLUE alliance:
+ * AutonBlueJewelGlyph is a class containing the following autonomous routine for the BLUE alliance:
  * <ol>
  *   <li>Score jewel</li>
+ *   <li>Score glyph in key</li>
+ *   <li>Park in safe zone</li>
  * </ol>
  */
-@Autonomous(name="Auton: Blue Jewel", group="Auton")
-public class AutonBlueJewel extends LinearOpMode {
+@Autonomous(name="Auton: Blue Jewel Glyph", group="Auton")
+public class AutonBlueJewelGlyph extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -30,17 +33,34 @@ public class AutonBlueJewel extends LinearOpMode {
 
         // Initialize CV
         VisionManager visionManager = new VisionManager();
-        visionManager.jewelInit(hardwareMap);
+        visionManager.vuforiaInit(hardwareMap);
 
         // Initialize robot
         robot.init(hardwareMap);
+        robot.drivetrain.encoderInit();
 
         // Wait until we're told to go
         waitForStart();
 
+        int key = -1;
+        while (opModeIsActive() && key == -1) {
+            key = visionManager.getKey();
+        }
+
+        telemetry.addData("Key:", key);
+        telemetry.update();
+        visionManager.vuforiaStop();
+
+        visionManager.jewelInit(hardwareMap);
+
         // Score jewel
         robot.jewel(visionManager, false);
-        sleep(1000);
+
+        // Score glyph
+        robot.scoreGlyph(key, false);
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
 
         // Stop CV
         visionManager.jewelStop();

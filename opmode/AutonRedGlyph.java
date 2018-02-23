@@ -1,26 +1,20 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
 import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
-import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 /**
- * AutonRedJewelGlyph is a class containing the following autonomous routine for the RED alliance:
+ * AutonBlueGlyph is a class containing the following autonomous routine for the RED alliance:
  * <ol>
- *   <li>Score jewel</li>
- *   <li>Score glyph</li>
+ *   <li>Score glyph into cryptobox</li>
  *   <li>Park in safe zone</li>
  * </ol>
  */
-@Autonomous(name="Auton: Red Jewel Glyph", group="Auton")
-public class AutonRedJewelGlyph extends LinearOpMode {
-
-    /* Private OpMode members */
-    private ElapsedTime     runtime = new ElapsedTime();
+@Autonomous(name="Auton: Red Glyph", group="Auton")
+public class AutonRedGlyph extends LinearOpMode {
 
     /* Robot hardware */
     private HardwareMain robot = new HardwareMain(this);
@@ -31,25 +25,12 @@ public class AutonRedJewelGlyph extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        // Initialize CV
-        VisionManager visionManager = new VisionManager();
-        visionManager.jewelInit(hardwareMap);
-
         // Initialize robot
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
 
         // Wait until we're told to go
         waitForStart();
-
-        // Score jewel
-        robot.jewel(visionManager, true);
-        sleep(1000);
-
-        // Stop CV
-        visionManager.jewelStop();
-
-        // Score glyph
         robot.scoreGlyph(1, true);
 
         // Note: can extend arm at end to ensure safe zone park
@@ -58,7 +39,6 @@ public class AutonRedJewelGlyph extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-
     }
 
 }

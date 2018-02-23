@@ -98,7 +98,6 @@ public class HardwareMain extends Mechanism {
         // Run only if opMode is not stopped
         if (opMode.opModeIsActive()) {
 
-            opMode.sleep(2000);
             JewelDetector.JewelOrder jewelOrder = visionManager.getJewelOrder();
             opMode.telemetry.addData("Order: ", jewelOrder);
             opMode.telemetry.update();

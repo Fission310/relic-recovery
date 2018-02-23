@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,13 +8,13 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
 import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 /**
- * AutonBlueJewel is a class containing the following autonomous routine for the RED alliance:
+ * AutonBlueJewel is a class containing the following autonomous routine for the BLUE alliance:
  * <ol>
  *   <li>Score jewel</li>
  * </ol>
  */
-@Autonomous(name="Auton: Red Jewel", group="Auton")
-public class AutonRedJewel extends LinearOpMode {
+@Autonomous(name="Auton: Blue Jewel", group="Auton")
+public class AutonBlueJewel extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -39,11 +39,12 @@ public class AutonRedJewel extends LinearOpMode {
         waitForStart();
 
         // Score jewel
-        robot.jewel(visionManager, true);
+        robot.jewel(visionManager, false);
         sleep(1000);
 
         // Stop CV
         visionManager.jewelStop();
+
     }
 
 }
