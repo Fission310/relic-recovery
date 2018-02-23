@@ -31,11 +31,9 @@ public class AutonRedGlyph extends LinearOpMode {
 
         // Wait until we're told to go
         waitForStart();
+
+        robot.arm.armUp();
         robot.scoreGlyph(1, true);
-
-        // Note: can extend arm at end to ensure safe zone park
-
-        sleep(1000);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

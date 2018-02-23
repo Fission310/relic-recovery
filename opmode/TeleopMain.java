@@ -28,7 +28,7 @@ import static java.lang.Math.abs;
  * DPAD_LEFT:       Toggle relic clamp
  * DPAD_RIGHT:      Set relic turn to inside robot state
  * START:           Set arm position to up
- * BACK:
+ * BACK:            Toggles between sweeper states: left and right
  *
  */
 @TeleOp(name = "Teleop: Main", group = "Teleop")
@@ -49,6 +49,7 @@ public class TeleopMain extends OpMode {
     private boolean flipState, flipDebounce;
     private boolean clampState, clampDebounce;
     private boolean turnState, turnDebounce;        // turnState toggles between acquiring (true) and neutral (false) states
+    private boolean sweeperState, sweeperDebounce;
 
     /**
      * Runs once when the OpMode is first enabled. The robot's hardware map is initialized.
@@ -64,7 +65,8 @@ public class TeleopMain extends OpMode {
         clampDebounce = false;
         turnState = false;
         turnDebounce = false;
-
+        sweeperState = false;
+        sweeperDebounce = false;
     }
 
 
@@ -195,6 +197,21 @@ public class TeleopMain extends OpMode {
             robot.relic.turnInside();
         } else {
             turnDebounce = false;
+        }
+
+        // Sweeper states
+        if (gamepad1.back || gamepad2.back) {
+            if (!sweeperDebounce) {
+                sweeperState = !sweeperState;
+                if (sweeperState) {
+                    robot.arm.sweeperRight();
+                } else {
+                    robot.arm.sweeperLeft();
+                }
+                sweeperDebounce = true;
+            }
+        } else {
+            sweeperDebounce = false;
         }
 
         double[] positions = robot.drivetrain.getPositions();

@@ -18,26 +18,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Arm extends Mechanism {
 
     /* CONSTANTS */
-    /**
-     * Hue threshold for blue jewel.
-     */
-    private static final double BLUE = 40;
-    /**
-     * Hue threshold for red jewel.
-     */
-    private static final double RED = 25;
-
-    // Hue scale factor
-    private static final double SCALE_FACTOR = 255 / 800;
     private static final double ARM_INIT_POS = 0;
     private static final double ARM_UP_POS = 0.2;
     private static final double ARM_DOWN_POS = 0.8;
-    private static final double SWEEPER_LEFT_POS = 0.2;
+    private static final double SWEEPER_LEFT_POS = 0;
     private static final double SWEEPER_NEUTRAL_POS = 0.5;
-    private static final double SWEEPER_RIGHT_POS = 0.8;
+    private static final double SWEEPER_RIGHT_POS = 1;
 
     /* Hardware members */
-    private ColorSensor sensorColor;
     private Servo arm;
     private Servo sweeper;
 
@@ -114,20 +102,5 @@ public class Arm extends Mechanism {
     public void sweeperRight() {
         sweeper.setPosition(SWEEPER_RIGHT_POS);
     }
-
-    /**
-     * Gets calculated hue readings from the color sensor.
-     * @return      array of hue values
-     */
-    public float[] getHSVValues() {
-        float hsvValues[] = {0F, 0F, 0F};
-        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                (int) (sensorColor.green() * SCALE_FACTOR),
-                (int) (sensorColor.blue() * SCALE_FACTOR),
-                hsvValues);
-        return hsvValues;
-    }
-
-
 
 }

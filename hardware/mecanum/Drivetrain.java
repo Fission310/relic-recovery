@@ -50,11 +50,11 @@ public class Drivetrain extends Mechanism {
     /**
      * Drive speed when using encoders.
      */
-    public static final double     DRIVE_SPEED             = 0.5;
+    public static final double     DRIVE_SPEED             = 0.4;
     /**
      * Turn speed when using encoders.
      */
-    public static final double     TURN_SPEED              = 0.4;
+    public static final double     TURN_SPEED              = 0.3;
 
     // Constant adjusting value for encoder driving
     private static final double     PCONSTANT               = 0.1;
@@ -287,26 +287,27 @@ public class Drivetrain extends Mechanism {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         // Calculate angle to turn
-        double targetAngle = (angle + angles.firstAngle) % 360;
+        double targetAngle = (angle + angles.firstAngle + 180) % 360;
 
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
 
         // Loop until a condition is met
-        while (opMode.opModeIsActive() && Math.abs(angles.firstAngle - targetAngle) > 0.1 && runtime.seconds() < timeoutS) {
+        while (opMode.opModeIsActive() && Math.abs((angles.firstAngle + 180) % 360 - targetAngle) > 0.5 && runtime.seconds() < timeoutS) {
 
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            int direction = (int) Math.signum(angles.firstAngle - targetAngle);
+            //int direction = (int) Math.signum(((angles.firstAngle + 180) % 360 - targetAngle + 360) % 360);
+            int direction = (int) Math.signum((angles.firstAngle + 180) % 360 - targetAngle + 360 - Math.abs(targetAngle - (angles.firstAngle + 180) % 360));
 
             // Set motor power according to calculated angle to turn
-            leftFront.setPower(-direction * speed);
-            rightFront.setPower(direction * speed);
-            leftBack.setPower(-direction * speed);
-            rightBack.setPower(direction * speed);
+            leftFront.setPower(direction * speed);
+            rightFront.setPower(-direction * speed);
+            leftBack.setPower(direction * speed);
+            rightBack.setPower(-direction * speed);
 
             // Display heading for the driver
-            opMode.telemetry.addData("Heading: ", "%.2f : %.2f", targetAngle, angles.firstAngle);
+            opMode.telemetry.addData("Heading: ", "%.2f : %.2f", targetAngle, (angles.firstAngle) + 180 % 360);
             opMode.telemetry.update();
         }
 

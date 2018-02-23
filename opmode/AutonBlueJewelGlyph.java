@@ -42,16 +42,19 @@ public class AutonBlueJewelGlyph extends LinearOpMode {
         // Wait until we're told to go
         waitForStart();
 
+        runtime.reset();
         int key = -1;
-        while (opModeIsActive() && key == -1) {
+        while (opModeIsActive() && key == -1 && runtime.seconds() < 5) {
             key = visionManager.getKey();
         }
+        if (key == -1) { key = 1; }
 
         telemetry.addData("Key:", key);
         telemetry.update();
         visionManager.vuforiaStop();
 
         visionManager.jewelInit(hardwareMap);
+        sleep(1000);
 
         // Score jewel
         robot.jewel(visionManager, false);
