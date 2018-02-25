@@ -98,10 +98,6 @@ public class HardwareMain extends Mechanism {
 
             // Arm should lower to in between the jewels
             arm.sweeperNeutral();
-            arm.armDown();
-
-            // Wait for arm to fully lower
-            opMode.sleep(1000);
 
             JewelDetector.JewelOrder jewelOrder = visionManager.getJewelOrder();
             opMode.telemetry.addData("Order: ", jewelOrder);
@@ -115,9 +111,14 @@ public class HardwareMain extends Mechanism {
                 }
             }
 
+            arm.armDown();
+
+            // Wait for arm to fully lower
             opMode.sleep(1000);
-            arm.armUp();    // Move the arm back into upright position
+
             arm.sweeperNeutral();
+            opMode.sleep(500);
+            arm.armUp();    // Move the arm back into upright position
             opMode.sleep(1000);
 
         }
