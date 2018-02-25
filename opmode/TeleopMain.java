@@ -18,7 +18,7 @@ import static java.lang.Math.abs;
  * X:               Turn intake on/off
  * Y:               Expel glyphs from intake
  * A:               Toggles between flipping states: neutral and score
- * B:
+ * B:               Toggles flipper adjustment
  * Left bumper:     Toggle between relic turn score and neutral states
  * Right bumper:    Hold for slow mode
  * Left trigger:    Lower flipper lift
@@ -47,6 +47,7 @@ public class TeleopMain extends OpMode {
     /* Button debouncing */
     private boolean acquirerState, acquirerDebounce;
     private boolean flipState, flipDebounce;
+    private boolean flipAdjustState, flipAdjustDebounce;
     private boolean clampState, clampDebounce;
     private boolean turnState, turnDebounce;        // turnState toggles between acquiring (true) and neutral (false) states
     private boolean sweeperState, sweeperDebounce;
@@ -61,6 +62,8 @@ public class TeleopMain extends OpMode {
         acquirerDebounce = false;
         flipState = false;
         flipDebounce = false;
+        flipAdjustState = false;
+        flipAdjustDebounce = false;
         clampState = true;
         clampDebounce = false;
         turnState = false;
@@ -128,6 +131,21 @@ public class TeleopMain extends OpMode {
             }
         } else {
             flipDebounce = false;
+        }
+
+        // Toggles between acquirer adjustment state
+        if (gamepad1.b || gamepad2.b) {
+            if (!flipAdjustDebounce) {
+                flipAdjustState = !flipAdjustState;
+                if (flipAdjustState) {
+                    robot.flipper.flipAdjust();
+                } else {
+                    robot.flipper.flipNeutral();
+                }
+                flipAdjustDebounce = true;
+            }
+        } else {
+            flipAdjustDebounce = false;
         }
 
         // Toggles acquirer

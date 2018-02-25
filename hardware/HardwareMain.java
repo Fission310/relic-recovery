@@ -143,15 +143,20 @@ public class HardwareMain extends Mechanism {
         drivetrain.turn(Drivetrain.TURN_SPEED, 90, 10);
         drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -9, -9, 5.0);
         flipper.setLiftPower(-1);
-        opMode.sleep(500);
+        opMode.sleep(1000);
         flipper.setLiftPower(0);
         flipper.flipScore();
         drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 6, 6, 2.0);
         flipper.flipNeutral();
         flipper.setLiftPower(1);
-        opMode.sleep(500);
+        opMode.sleep(750);
         flipper.setLiftPower(0);
+        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -6, -6, 2.0);
+        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 6, 6, 2.0);
 
+    }
+
+    public void scoreAdditionalGlyphs(int initialCol, boolean isAllianceRed) {
 
     }
 

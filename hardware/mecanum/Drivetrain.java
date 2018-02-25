@@ -162,10 +162,10 @@ public class Drivetrain extends Mechanism {
         double v3 = r * Math.sin(robotAngle) + turn;
         double v4 = r * Math.cos(robotAngle) - turn;
 
-        leftFront.setPower(-v1); // v2
-        leftBack.setPower(-v3); // v4
-        rightBack.setPower(-v4); // v3
-        rightFront.setPower(-v2); // v1
+        leftFront.setPower(v2); // v2
+        leftBack.setPower(v4); // v4
+        rightBack.setPower(v3); // v3
+        rightFront.setPower(v1); // v1
     }
 
     /*
@@ -297,8 +297,8 @@ public class Drivetrain extends Mechanism {
         while (opMode.opModeIsActive() && Math.abs((angles.firstAngle + 180) % 360 - targetAngle) > 0.5 && runtime.seconds() < timeoutS) {
 
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            //int direction = (int) Math.signum(((angles.firstAngle + 180) % 360 - targetAngle + 360) % 360);
-            int direction = (int) Math.signum((angles.firstAngle + 180) % 360 - targetAngle + 360 - Math.abs(targetAngle - (angles.firstAngle + 180) % 360));
+            int direction = (int) Math.signum(((angles.firstAngle + 180) % 360 - targetAngle + 360) % 360);
+            //int direction = (int) Math.signum((angles.firstAngle + 180) % 360 - targetAngle + 360 - Math.abs(targetAngle - (angles.firstAngle + 180) % 360));
 
             // Set motor power according to calculated angle to turn
             leftFront.setPower(direction * speed);
@@ -322,8 +322,9 @@ public class Drivetrain extends Mechanism {
      * Strafe in a specified direction at a specified speed.
      * @param speed         maximum power of drivetrain motors when driving
      * @param direction     direction of strafing (positive for right, negative for left)
+     * @param timeoutS      amount of time before the move should stop
      */
-    public void strafe(double speed, double direction) {
+    public void strafe(double speed, double direction, double timeoutS) {
 
     }
 

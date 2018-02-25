@@ -66,7 +66,7 @@ public class Acquirer extends Mechanism {
      */
     public void setIntakePower(double power) {
         intakeL.setPower(power);
-        intakeR.setPower(power);
+        intakeR.setPower(-power);
     }
 
 }
