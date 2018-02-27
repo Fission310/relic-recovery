@@ -37,17 +37,18 @@ public class AutonBlueGlyph extends LinearOpMode {
 
         robot.drivetrain.turn(40, 2.0);
         robot.acquirer.setIntakePower(1);
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED * 2, 55, 55, 5.0);
+        robot.drivetrain.driveToPos(55, 5.0);
         sleep(2000);
 
         robot.acquirer.setIntakePower(0);
 
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED * 2, -50, -50, 5.0);
+        robot.drivetrain.driveToPos(-50, 5.0);
         robot.drivetrain.turn(-40, 2.0);
+
         // score glyph
         robot.flipper.flipScore();
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -6, -6, 2.0);
-        robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 6, 6, 2.0);
+        robot.drivetrain.driveToPos(-6, 2.0);
+        robot.drivetrain.driveToPos(6, 2.0);
 
 
         telemetry.addData("Path", "Complete");

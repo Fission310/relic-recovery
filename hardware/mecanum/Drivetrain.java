@@ -175,29 +175,23 @@ public class Drivetrain extends Mechanism {
      *  <li>Driver stops the running OpMode</li>
      * </ul>
      *
-     * @param speed         maximum power of drivetrain motors when driving
-     * @param leftInches    number of inches to move on the left side
-     * @param rightInches   number of inches to move on the right side
+     * @param inches        number of inches to drive
      * @param timeoutS      amount of time before the move should stop
      */
-    public void driveToPos(double speed, double leftInches, double rightInches, double timeoutS) {
+    public void driveToPos(double inches, double timeoutS) {
 
         // Drivetrain adjustments
-        leftInches = -leftInches;
-        rightInches = -rightInches;
+        inches = -inches;
 
         // Target position variables
         int newLeftFrontTarget, newLeftBackTarget;
         int newRightFrontTarget, newRightBackTarget;
 
-        // Current heading angle of robot
-        double currentAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-
         // Determine new target position, and pass to motor controller
-        newLeftFrontTarget = leftFront.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightFrontTarget = rightFront.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-        newLeftBackTarget = leftFront.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightBackTarget = rightFront.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        newLeftFrontTarget = leftFront.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        newRightFrontTarget = rightFront.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        newLeftBackTarget = leftFront.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        newRightBackTarget = rightFront.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
         leftFront.setTargetPosition(newLeftFrontTarget);
         rightFront.setTargetPosition(newRightFrontTarget);
         leftBack.setTargetPosition(newLeftBackTarget);
@@ -219,10 +213,11 @@ public class Drivetrain extends Mechanism {
                 (leftFront.isBusy() && rightFront.isBusy() && leftBack.isBusy() && rightBack.isBusy())) {
 
             // Set power of drivetrain motors accounting for adjustment
-            leftFront.setPower(Math.abs(speed));
-            rightFront.setPower(-Math.abs(speed));
-            leftBack.setPower(Math.abs(speed));
-            rightBack.setPower(-Math.abs(speed));
+            final double expFactor = 0.5;
+            leftFront.setPower(Math.pow((newLeftFrontTarget - leftFront.getCurrentPosition()) / newLeftFrontTarget, expFactor));
+            rightFront.setPower(-Math.pow((newRightFrontTarget - rightFront.getCurrentPosition()) / newRightFrontTarget, expFactor));
+            leftBack.setPower(Math.pow((newLeftBackTarget - leftBack.getCurrentPosition()) / newLeftBackTarget, expFactor));
+            rightBack.setPower(-Math.pow((newRightBackTarget - rightBack.getCurrentPosition()) / newRightBackTarget, expFactor));
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %.2f :%.2f :%.2f :%.2f",
@@ -277,7 +272,6 @@ public class Drivetrain extends Mechanism {
 
         // Loop until a condition is met
         while (opMode.opModeIsActive() && Math.abs(getHeading() - targetAngle) > 0.5 && runtime.seconds() < timeoutS) {
-
 
             final double expFactor = 0.5;
             double velocity = Math.pow(getError(targetAngle) / 180, expFactor);

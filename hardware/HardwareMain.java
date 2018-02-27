@@ -43,7 +43,6 @@ public class HardwareMain extends Mechanism {
     public Flipper flipper;
 
     /* Miscellaneous mechanisms */
-    private ModernRoboticsI2cRangeSensor sensorDistance;
 
     /**
      * Default constructor for HardwareTank. Instantiates public mechanism instance variables.
@@ -80,9 +79,6 @@ public class HardwareMain extends Mechanism {
         arm.init(hwMap);
         relic.init(hwMap);
         flipper.init(hwMap);
-
-        // Initialize range sensor
-        sensorDistance = hwMap.get(ModernRoboticsI2cRangeSensor.class, RCConfig.RANGE_SENSOR);
     }
 
     /**
@@ -141,11 +137,11 @@ public class HardwareMain extends Mechanism {
         relic.turnNeutral();
 
         // drive to position
-        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, direction * 24, direction * 24, 5.0);
+        drivetrain.driveToPos(direction * 24, 5.0);
         drivetrain.turn(direction * 90, 10);
-        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -direction * (3 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), -direction * (3 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
+        drivetrain.driveToPos(-direction * (3 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
         drivetrain.turn(180, 10);
-        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -9, -9, 5.0);
+        drivetrain.driveToPos(-9, 5.0);
 
         // score glyph
         flipAndAlignGlyph();
@@ -167,9 +163,9 @@ public class HardwareMain extends Mechanism {
         relic.turnNeutral();
 
         // drive to position
-        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -direction * (24 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), -direction * (24 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
+        drivetrain.driveToPos(-direction * (24 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
         drivetrain.turn(-90, 5.0);
-        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -9, -9, 2.0);
+        drivetrain.driveToPos(-9, 2.0);
 
         // score glyph
         flipAndAlignGlyph();
@@ -181,14 +177,14 @@ public class HardwareMain extends Mechanism {
         opMode.sleep(500);
         flipper.setLiftPower(0);
         flipper.flipScore();
-        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 6, 6, 2.0);
+        drivetrain.driveToPos(6, 2.0);
         opMode.sleep(500);
         flipper.flipNeutral();
         flipper.setLiftPower(1);
         opMode.sleep(250);
         flipper.setLiftPower(0);
-        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -6, -6, 2.0);
-        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 6, 6, 2.0);
+        drivetrain.driveToPos(-6, 2.0);
+        drivetrain.driveToPos(6, 2.0);
     }
 
     public void scoreAdditionalGlyphs(int initialCol, boolean isAllianceRed) {
