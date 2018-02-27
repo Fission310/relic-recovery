@@ -26,18 +26,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.opmode.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
-import org.firstinspires.ftc.teamcode.hardware.tankdrive.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 
@@ -85,7 +79,7 @@ public class AutonVuMark extends LinearOpMode {
             visionManager.vuforiaStop();
 
             // Run glyph scoring action
-            robot.scoreGlyph(key, true);
+            robot.scoreGlyphFar(key, true);
 
         }
     }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.opmode.auton.far;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
  *   <li>Park in safe zone</li>
  * </ol>
  */
-@Autonomous(name="Auton: Blue Glyph", group="Auton")
+@Autonomous(name="Auton: Blue Glyph Far", group="Auton")
 public class AutonBlueGlyph extends LinearOpMode {
 
     /* Robot hardware */
@@ -33,9 +33,9 @@ public class AutonBlueGlyph extends LinearOpMode {
         waitForStart();
 
         robot.arm.armUp();
-        robot.scoreGlyph(1, false);
+        robot.scoreGlyphFar(1, false);
 
-        robot.drivetrain.turn(Drivetrain.TURN_SPEED, 40, 2.0);
+        robot.drivetrain.turn(40, 2.0);
         robot.acquirer.setIntakePower(1);
         robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED * 2, 55, 55, 5.0);
         sleep(2000);
@@ -43,7 +43,7 @@ public class AutonBlueGlyph extends LinearOpMode {
         robot.acquirer.setIntakePower(0);
 
         robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED * 2, -50, -50, 5.0);
-        robot.drivetrain.turn(Drivetrain.TURN_SPEED, -40, 2.0);
+        robot.drivetrain.turn(-40, 2.0);
         // score glyph
         robot.flipper.flipScore();
         robot.drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -6, -6, 2.0);

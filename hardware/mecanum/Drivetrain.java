@@ -51,10 +51,6 @@ public class Drivetrain extends Mechanism {
      * Drive speed when using encoders.
      */
     public static final double     DRIVE_SPEED             = 0.4;
-    /**
-     * Turn speed when using encoders.
-     */
-    public static final double     TURN_SPEED              = 0.3;
 
     // Constant adjusting value for encoder driving
     private static final double     PCONSTANT               = 0.1;
@@ -168,14 +164,6 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(v1); // v1
     }
 
-    /*
-    public void testDrive(double x, double y, double turn) {
-        leftFront.setPower((-y - x) / 2 + turn / 2);
-        rightFront.setPower((y - x) / 2 + turn / 2);
-        leftBack.setPower((-y - x) / 2 + turn / 2);
-        rightBack.setPower((y - x) / 2 + turn / 2);
-    }
-    */
 
     /**
      * Drive to a relative position using encoders and an IMU.
@@ -269,7 +257,7 @@ public class Drivetrain extends Mechanism {
     }
 
     /**
-     * Turn to a specified angle using an IMU.
+     * Turn to a specified angle relative to the robot's starting position using an IMU.
      *
      * Robot will stop moving if any of three conditions occur:
      * <li>
@@ -278,36 +266,30 @@ public class Drivetrain extends Mechanism {
      *  <ol>Driver stops the running OpMode</ol>
      * </li>
      *
-     * @param speed         maximum power of drivetrain motors when driving
-     * @param angle         number of degrees to turn
+     * @param targetAngle   number of degrees to turn
      * @param timeoutS      amount of time before the move should stop
      */
-    public void turn(double speed, double angle, double timeoutS) {
-        // Get IMU angles
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        // Calculate angle to turn
-        double targetAngle = (angle + angles.firstAngle + 180) % 360;
+    public void turn(double targetAngle, double timeoutS) {
 
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
 
         // Loop until a condition is met
-        while (opMode.opModeIsActive() && Math.abs((angles.firstAngle + 180) % 360 - targetAngle) > 0.5 && runtime.seconds() < timeoutS) {
+        while (opMode.opModeIsActive() && Math.abs(getHeading() - targetAngle) > 0.5 && runtime.seconds() < timeoutS) {
 
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            int direction = (int) Math.signum(((angles.firstAngle + 180) % 360 - targetAngle + 360) % 360);
-            //int direction = (int) Math.signum((angles.firstAngle + 180) % 360 - targetAngle + 360 - Math.abs(targetAngle - (angles.firstAngle + 180) % 360));
+
+            final double expFactor = 0.5;
+            double velocity = Math.pow(getError(targetAngle) / 180, expFactor);
 
             // Set motor power according to calculated angle to turn
-            leftFront.setPower(direction * speed);
-            rightFront.setPower(-direction * speed);
-            leftBack.setPower(direction * speed);
-            rightBack.setPower(-direction * speed);
+            leftFront.setPower(velocity);
+            rightFront.setPower(-velocity);
+            leftBack.setPower(velocity);
+            rightBack.setPower(-velocity);
 
             // Display heading for the driver
-            opMode.telemetry.addData("Heading: ", "%.2f : %.2f", targetAngle, (angles.firstAngle) + 180 % 360);
+            opMode.telemetry.addData("Heading: ", "%.2f : %.2f", targetAngle, getHeading());
             opMode.telemetry.update();
         }
 
@@ -316,6 +298,17 @@ public class Drivetrain extends Mechanism {
         rightFront.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
+    }
+
+    // Get angle of orientation of robot
+    private double getHeading() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.firstAngle;
+    }
+
+    // Get the difference in the target angle and the current heading
+    private double getError(double targetAngle) {
+        return targetAngle - getHeading();
     }
 
     /**

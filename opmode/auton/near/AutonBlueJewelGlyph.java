@@ -1,23 +1,22 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.opmode.auton.near;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
-import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 /**
- * AutonRedJewelGlyph is a class containing the following autonomous routine for the RED alliance:
+ * AutonBlueJewelGlyph is a class containing the following autonomous routine for the BLUE alliance:
  * <ol>
  *   <li>Score jewel</li>
  *   <li>Score glyph in key</li>
  *   <li>Park in safe zone</li>
  * </ol>
  */
-@Autonomous(name="Auton: Red Jewel Glyph", group="Auton")
-public class AutonRedJewelGlyph extends LinearOpMode {
+@Autonomous(name="Auton: Blue Jewel Glyph Near", group="Auton")
+public class AutonBlueJewelGlyph extends LinearOpMode {
 
     /* Private OpMode members */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -57,10 +56,10 @@ public class AutonRedJewelGlyph extends LinearOpMode {
         sleep(1000);
 
         // Score jewel
-        robot.jewel(visionManager, true);
+        robot.jewel(visionManager, false);
 
         // Score glyph
-        robot.scoreGlyph(key, true);
+        robot.scoreGlyphNear(key, false);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

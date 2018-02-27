@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain; // Change to current drivetrain
 import org.firstinspires.ftc.teamcode.util.VisionManager;
 
+import static org.firstinspires.ftc.teamcode.FieldConstants.CRYPTO_COLUMN_WIDTH;
+
 
 /**
  * HardwareTank is the class that is used to define all of the hardware for a single robot. In this
@@ -96,8 +98,11 @@ public class HardwareMain extends Mechanism {
         // Run only if opMode is not stopped
         if (opMode.opModeIsActive()) {
 
-            // Arm should lower to in between the jewels
             arm.sweeperNeutral();
+            arm.armDown();
+
+            // Wait for arm to fully lower
+            opMode.sleep(750);
 
             JewelDetector.JewelOrder jewelOrder = visionManager.getJewelOrder();
             opMode.telemetry.addData("Order: ", jewelOrder);
@@ -111,13 +116,9 @@ public class HardwareMain extends Mechanism {
                 }
             }
 
-            arm.armDown();
-
-            // Wait for arm to fully lower
-            opMode.sleep(1000);
+            opMode.sleep(750);
 
             arm.sweeperNeutral();
-            opMode.sleep(500);
             arm.armUp();    // Move the arm back into upright position
             opMode.sleep(1000);
 
@@ -129,32 +130,65 @@ public class HardwareMain extends Mechanism {
      * Autonomous action for scoring a glyph. Uses the robot's distance sensor to detect the robot's
      * position using the cryptobox wall. Moves parallel to cryptobox until the target column is
      * reached.
-     * This assumes the distance sensor faces the cryptobox wall.
+     * This assumes the target is the far cryptobox.
      *
      *  @param targetCol      the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
      *  @param isAllianceRed    whether or not the robot is on the Red Alliance
      */
-    public void scoreGlyph(int targetCol, boolean isAllianceRed) {
+    public void scoreGlyphFar(int targetCol, boolean isAllianceRed) {
 
         int direction = isAllianceRed ? -1 : 1;
         relic.turnNeutral();
+
+        // drive to position
         drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, direction * 24, direction * 24, 5.0);
-        drivetrain.turn(Drivetrain.TURN_SPEED, direction * 90, 10);
-        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -direction*7*(targetCol+1), -direction*7*(targetCol+1), 5.0);
-        drivetrain.turn(Drivetrain.TURN_SPEED, 90, 10);
+        drivetrain.turn(direction * 90, 10);
+        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -direction * (3 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), -direction * (3 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
+        drivetrain.turn(180, 10);
         drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -9, -9, 5.0);
+
+        // score glyph
+        flipAndAlignGlyph();
+
+    }
+
+    /**
+     * Autonomous action for scoring a glyph. Uses the robot's distance sensor to detect the robot's
+     * position using the cryptobox wall. Moves parallel to cryptobox until the target column is
+     * reached.
+     * This assumes the target is the near cryptobox.
+     *
+     *  @param targetCol      the cryptobox column that is being targeted (left is 0, center is 1, right is 2)
+     *  @param isAllianceRed    whether or not the robot is on the Red Alliance
+     */
+    public void scoreGlyphNear(int targetCol, boolean isAllianceRed) {
+
+        int direction = isAllianceRed ? -1 : 1;
+        relic.turnNeutral();
+
+        // drive to position
+        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -direction * (24 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), -direction * (24 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
+        drivetrain.turn(-90, 5.0);
+        drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -9, -9, 2.0);
+
+        // score glyph
+        flipAndAlignGlyph();
+
+    }
+
+    private void flipAndAlignGlyph() {
         flipper.setLiftPower(-1);
-        opMode.sleep(1000);
+        opMode.sleep(500);
         flipper.setLiftPower(0);
         flipper.flipScore();
         drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 6, 6, 2.0);
+        opMode.sleep(500);
         flipper.flipNeutral();
         flipper.setLiftPower(1);
-        opMode.sleep(750);
+        opMode.sleep(250);
         flipper.setLiftPower(0);
         drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, -6, -6, 2.0);
         drivetrain.driveToPos(Drivetrain.DRIVE_SPEED, 6, 6, 2.0);
-
     }
 
     public void scoreAdditionalGlyphs(int initialCol, boolean isAllianceRed) {

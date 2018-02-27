@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmode;
+package org.firstinspires.ftc.teamcode.opmode.auton.far;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
-import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
 
 /**
  * AutonBlueGlyph is a class containing the following autonomous routine for the RED alliance:
@@ -13,7 +12,7 @@ import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
  *   <li>Park in safe zone</li>
  * </ol>
  */
-@Autonomous(name="Auton: Red Glyph", group="Auton")
+@Autonomous(name="Auton: Red Glyph Far", group="Auton")
 public class AutonRedGlyph extends LinearOpMode {
 
     /* Robot hardware */
@@ -33,7 +32,7 @@ public class AutonRedGlyph extends LinearOpMode {
         waitForStart();
 
         robot.arm.armUp();
-        robot.scoreGlyph(1, true);
+        robot.scoreGlyphFar(1, true);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
