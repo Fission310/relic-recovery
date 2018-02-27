@@ -311,16 +311,6 @@ public class Drivetrain extends Mechanism {
         return targetAngle - getHeading();
     }
 
-    /**
-     * Strafe in a specified direction at a specified speed.
-     * @param speed         maximum power of drivetrain motors when driving
-     * @param direction     direction of strafing (positive for right, negative for left)
-     * @param timeoutS      amount of time before the move should stop
-     */
-    public void strafe(double speed, double direction, double timeoutS) {
-
-    }
-
     public double[] getPositions() {
         double[] positions = new double[4];
         positions[0] = leftFront.getCurrentPosition() / COUNTS_PER_INCH;
