@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.util;
 
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.detectors.GlyphDetector;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -21,6 +22,8 @@ public class VisionManager {
 
     /* Detectors and Instace Variables */
     private JewelDetector jewelDetector;
+    private GlyphDetector glyphDetector;
+
     private ClosableVuforiaLocalizer vuforia;
     private VuforiaTrackables relicTrackables;
     private VuforiaTrackable relicTemplate;
@@ -62,6 +65,51 @@ public class VisionManager {
     }
 
     /**
+     * Initializes the glyph detector.
+     * @param hwMap the robot's hardware map
+     */
+    public void glyphInit(HardwareMap hwMap) {
+        // Initialize CV
+        glyphDetector = new GlyphDetector();
+        glyphDetector.init(hwMap.appContext, CameraViewDisplay.getInstance());
+        glyphDetector.minScore = 1;
+        glyphDetector.downScaleFactor = 0.3;
+        glyphDetector.speed = GlyphDetector.GlyphDetectionSpeed.SLOW;
+        glyphDetector.enable();
+    }
+
+    /**
+     * Stops the glyph detector.
+     */
+    public void glyphStop() {
+        glyphDetector.disable();
+    }
+
+    /**
+     * Get x position of glyph using DogeCV.
+     *
+     */
+    public double getGlyphPosX() {
+        return glyphDetector.getChosenGlyphPosition().x;
+    }
+
+    /**
+     * Get x position of glyph using DogeCV.
+     *
+     */
+    public double getGlyphPosY() {
+        return glyphDetector.getChosenGlyphPosition().y;
+    }
+
+    /**
+     * Get offset of a glyph using DogeCV.
+     *
+     */
+    public double getGlyphOffset() {
+        return glyphDetector.getChosenGlyphOffset();
+    }
+
+    /**
      * Initializes Vuforia for detecting VuMarks.
      * @param hwMap the robot's hardware map
      */
@@ -73,21 +121,6 @@ public class VisionManager {
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         ClosableVuforiaLocalizer.Parameters parameters = new ClosableVuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-        // OR...  Do Not Activate the Camera Monitor View, to save power
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        /*
-         * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-         * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-         * web site at https://developer.vuforia.com/license-manager.
-         *
-         * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-         * random data. As an example, here is a example of a fragment of a valid key:
-         *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-         * Once you've obtained a license key, copy the string from the Vuforia web site
-         * and paste it in to your code onthe next line, between the double quotes.
-         */
         parameters.vuforiaLicenseKey = "ATHlAS7/////AAAAGSrlghNuCkIdu0Y/Eqnxz9oejoRzibKYqWJYEJik+9ImrFuJaDs2/WAm5ovuC4iV/m4DHM3WWgAl9pI5MQULOsKslna/+bYWzcbzpzak4NMtWuGLnnJYCeH8vP2x8fC8R0I+Odvd4vhnJdSa3P6C87oTqtVSX0sZcVOvALmUpCJcSFHAqshW0F7XziW89qM4tBDQoKgNCkbFNmKeRnKa4j4Vfyk0RSNXc/79shIk8Pu4j8krsBComGYTx4FKsClnfgZYOp51uhMg/yoEHfpy0XMrCOBZUYIyTVvOsCtC9GzLAOLoxEnunRRjagCKni32kkrH07slhuiCqpNBJQ02y8qZFChTjt5i+ZZwnzaWCFSf";
 
         /*

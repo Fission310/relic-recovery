@@ -172,6 +172,7 @@ public class HardwareMain extends Mechanism {
 
     }
 
+    // Routine for scoring and aligning the glyph in the cryptobox
     private void flipAndAlignGlyph() {
         flipper.setLiftPower(-1);
         opMode.sleep(500);
@@ -189,6 +190,14 @@ public class HardwareMain extends Mechanism {
 
     public void scoreAdditionalGlyphs(int initialCol, boolean isAllianceRed) {
 
+    }
+
+
+    public void findGlyph(VisionManager visionManager) {
+        opMode.telemetry.addData("Glyph Pos X:", visionManager.getGlyphPosX());
+        opMode.telemetry.addData("Glyph Pos Y:", visionManager.getGlyphPosY());
+        opMode.telemetry.addData("Glyph Offset:", visionManager.getGlyphOffset());
+        opMode.telemetry.update();
     }
 
 }
