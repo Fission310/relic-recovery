@@ -213,11 +213,10 @@ public class Drivetrain extends Mechanism {
                 (leftFront.isBusy() && rightFront.isBusy() && leftBack.isBusy() && rightBack.isBusy())) {
 
             // Set power of drivetrain motors accounting for adjustment
-            final double expFactor = 0.5;
-            leftFront.setPower(Math.pow((newLeftFrontTarget - leftFront.getCurrentPosition()) / newLeftFrontTarget, expFactor));
-            rightFront.setPower(-Math.pow((newRightFrontTarget - rightFront.getCurrentPosition()) / newRightFrontTarget, expFactor));
-            leftBack.setPower(Math.pow((newLeftBackTarget - leftBack.getCurrentPosition()) / newLeftBackTarget, expFactor));
-            rightBack.setPower(-Math.pow((newRightBackTarget - rightBack.getCurrentPosition()) / newRightBackTarget, expFactor));
+            leftFront.setPower(Drivetrain.DRIVE_SPEED);
+            rightFront.setPower(-Drivetrain.DRIVE_SPEED);
+            leftBack.setPower(Drivetrain.DRIVE_SPEED);
+            rightBack.setPower(-Drivetrain.DRIVE_SPEED);
 
             // Display info for the driver.
             opMode.telemetry.addData("Path1", "Running to %.2f :%.2f :%.2f :%.2f",
@@ -273,8 +272,8 @@ public class Drivetrain extends Mechanism {
         // Loop until a condition is met
         while (opMode.opModeIsActive() && Math.abs(getHeading() - targetAngle) > 0.5 && runtime.seconds() < timeoutS) {
 
-            final double expFactor = 0.5;
-            double velocity = Math.pow(getError(targetAngle) / 180, expFactor);
+            //double velocity = getError(targetAngle) / 180 * 2; // this works
+            double velocity = Math.max(getError(targetAngle) / 180 * 2, 0.25); // to be tested why doesn't this work
 
             // Set motor power according to calculated angle to turn
             leftFront.setPower(velocity);
@@ -284,6 +283,7 @@ public class Drivetrain extends Mechanism {
 
             // Display heading for the driver
             opMode.telemetry.addData("Heading: ", "%.2f : %.2f", targetAngle, getHeading());
+            opMode.telemetry.addData("Velocity: ", "%.2f", velocity);
             opMode.telemetry.update();
         }
 

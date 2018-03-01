@@ -95,14 +95,15 @@ public class HardwareMain extends Mechanism {
         if (opMode.opModeIsActive()) {
 
             arm.sweeperNeutral();
-            arm.armDown();
-
-            // Wait for arm to fully lower
-            opMode.sleep(750);
 
             JewelDetector.JewelOrder jewelOrder = visionManager.getJewelOrder();
             opMode.telemetry.addData("Order: ", jewelOrder);
             opMode.telemetry.update();
+
+            arm.armDown();
+
+            // Wait for arm to fully lower
+            opMode.sleep(750);
 
             if (!jewelOrder.equals(JewelDetector.JewelOrder.UNKNOWN)) {
                 if ((jewelOrder.equals(JewelDetector.JewelOrder.BLUE_RED) && isAllianceRed) || (jewelOrder.equals(JewelDetector.JewelOrder.RED_BLUE) && !isAllianceRed)) {
@@ -163,7 +164,7 @@ public class HardwareMain extends Mechanism {
         relic.turnNeutral();
 
         // drive to position
-        drivetrain.driveToPos(-direction * (24 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
+        drivetrain.driveToPos(-direction * (17 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
         drivetrain.turn(-90, 5.0);
         drivetrain.driveToPos(-9, 2.0);
 

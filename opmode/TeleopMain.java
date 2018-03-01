@@ -88,6 +88,11 @@ public class TeleopMain extends OpMode {
     public void start() {
         robot.init(hardwareMap);
         robot.drivetrain.encoderInit();
+
+        robot.arm.armUp();
+        robot.arm.sweeperNeutral();
+        robot.relic.turnNeutral();
+
         runtime.reset();
     }
 
