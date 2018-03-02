@@ -138,11 +138,11 @@ public class HardwareMain extends Mechanism {
         relic.turnNeutral();
 
         // drive to position
-        drivetrain.driveToPos(direction * 24, 5.0);
-        drivetrain.turn(direction * 90, 10);
-        drivetrain.driveToPos(-direction * (3 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
-        drivetrain.turn(180, 10);
-        drivetrain.driveToPos(-9, 5.0);
+        drivetrain.driveToPos(-direction * 24, 5.0);
+        drivetrain.turn(-direction * 90, 10);
+        drivetrain.driveToPos(direction * (3 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
+        drivetrain.turn(0, 10);
+        drivetrain.driveToPos(9, 5.0);
 
         // score glyph
         flipAndAlignGlyph();
@@ -164,9 +164,9 @@ public class HardwareMain extends Mechanism {
         relic.turnNeutral();
 
         // drive to position
-        drivetrain.driveToPos(-direction * (17 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
-        drivetrain.turn(-90, 5.0);
-        drivetrain.driveToPos(-9, 2.0);
+        drivetrain.driveToPos(direction * (17 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
+        drivetrain.turn(90, 5.0);
+        drivetrain.driveToPos(9, 2.0);
 
         // score glyph
         flipAndAlignGlyph();
@@ -179,14 +179,14 @@ public class HardwareMain extends Mechanism {
         opMode.sleep(500);
         flipper.setLiftPower(0);
         flipper.flipScore();
-        drivetrain.driveToPos(6, 2.0);
+        drivetrain.driveToPos(-6, 2.0);
         opMode.sleep(500);
         flipper.flipNeutral();
         flipper.setLiftPower(1);
         opMode.sleep(250);
         flipper.setLiftPower(0);
-        drivetrain.driveToPos(-6, 2.0);
         drivetrain.driveToPos(6, 2.0);
+        drivetrain.driveToPos(-6, 2.0);
     }
 
     public void scoreAdditionalGlyphs(int initialCol, boolean isAllianceRed) {
@@ -195,10 +195,12 @@ public class HardwareMain extends Mechanism {
 
 
     public void findGlyph(VisionManager visionManager) {
-        opMode.telemetry.addData("Glyph Pos X:", visionManager.getGlyphPosX());
-        opMode.telemetry.addData("Glyph Pos Y:", visionManager.getGlyphPosY());
-        opMode.telemetry.addData("Glyph Offset:", visionManager.getGlyphOffset());
-        opMode.telemetry.update();
+        while (opMode.opModeIsActive()) {
+            opMode.telemetry.addData("Glyph Pos X:", visionManager.getGlyphPosX());
+            opMode.telemetry.addData(                                                                        "Glyph Pos Y:", visionManager.getGlyphPosY());
+            opMode.telemetry.addData("Glyph Offset:", visionManager.getGlyphOffset());
+            opMode.telemetry.update();
+        }
     }
 
 }
