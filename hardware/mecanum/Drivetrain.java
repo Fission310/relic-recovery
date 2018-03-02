@@ -294,8 +294,11 @@ public class Drivetrain extends Mechanism {
         rightBack.setPower(0);
     }
 
-    // Get angle of orientation of robot
-    private double getHeading() {
+    /**
+     * Get heading of the robot relative to the initialized position.
+     * @return      heading of the robot
+     */
+    public double getHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;
     }

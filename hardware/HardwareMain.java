@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain; // Change to current drivetrain
 import org.firstinspires.ftc.teamcode.util.VisionManager;
 
+import java.util.ArrayList;
+
 import static org.firstinspires.ftc.teamcode.FieldConstants.CRYPTO_COLUMN_WIDTH;
 
 
@@ -79,6 +81,16 @@ public class HardwareMain extends Mechanism {
         arm.init(hwMap);
         relic.init(hwMap);
         flipper.init(hwMap);
+    }
+
+    /**
+     * Waits for opMode's to start. Can perform actions while waiting.
+     */
+    public void waitForStart() {
+        while (!opMode.opModeIsActive()) {
+            opMode.telemetry.addData("Heading:", drivetrain.getHeading());
+            opMode.telemetry.update();
+        }
     }
 
     /**
@@ -189,15 +201,60 @@ public class HardwareMain extends Mechanism {
         drivetrain.driveToPos(-6, 2.0);
     }
 
-    public void scoreAdditionalGlyphs(int initialCol, boolean isAllianceRed) {
+    /**
+     * Assumes that robot is in the safe zone after flipping and aligning. Finds and scores additional
+     * glyphs into a different column.
+     * @param initialCols
+     * @param isAllianceRed
+     * @return                  column scored in
+     */
+    public int scoreAdditionalGlyphsFar(ArrayList<Integer> initialCols, boolean isAllianceRed) {
+
+        // relative coordinates to desired point in glyph put
+        double x0 = 48 - CRYPTO_COLUMN_WIDTH*initialCols.get(initialCols.size() - 1);
+        double y0 = 48;
+
+        // rotate to desired point
+        drivetrain.turn(-Math.toDegrees(Math.atan(x0/y0)), 2.0);
+        // drive to the desired point
+        drivetrain.driveToPos(Math.sqrt(x0*x0 + y0*y0), 5.0);
+
+        acquirer.setIntakePower(1);
+        opMode.sleep(2000);
+        acquirer.setIntakePower(0);
+
+        // determine target cryptobox column
+        int targetCol;
+        if (initialCols.indexOf(2) != -1) {
+            targetCol = 2;
+        } else if (initialCols.indexOf(1) != -1) {
+            targetCol = 1;
+        } else if (initialCols.indexOf(0) != -1) {
+            targetCol = 0;
+        } else {
+            initialCols.clear();
+            targetCol = 2;
+        }
+
+        double x1 = 48 - CRYPTO_COLUMN_WIDTH*targetCol;
+        double y1 = -48;
+
+        // rotate to desired column
+        drivetrain.turn(0, 2.0);
+        drivetrain.turn(-Math.toDegrees(Math.atan(x1/y1)), 2.0);
+        // drive to the desired point
+        drivetrain.driveToPos(-Math.sqrt(x1*x1 + y1*y1), 5.0);
+        // turn to initial heading
+        drivetrain.turn(0, 2.0);
+
+        return targetCol;
 
     }
-
 
     public void findGlyph(VisionManager visionManager) {
         while (opMode.opModeIsActive()) {
             opMode.telemetry.addData("Glyph Pos X:", visionManager.getGlyphPosX());
-            opMode.telemetry.addData(                                                                        "Glyph Pos Y:", visionManager.getGlyphPosY());
+            opMode.telemetry.addData("Glyph Pos Y:", visionManager.getGlyphPosY());
             opMode.telemetry.addData("Glyph Offset:", visionManager.getGlyphOffset());
             opMode.telemetry.update();
         }
