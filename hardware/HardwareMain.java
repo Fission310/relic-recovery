@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.disnodeteam.dogecv.detectors.JewelDetector;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain; // Change to current drivetrain
+import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
 import org.firstinspires.ftc.teamcode.util.VisionManager;
 
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class HardwareMain extends Mechanism {
     /* Miscellaneous mechanisms */
 
     /**
-     * Default constructor for HardwareTank. Instantiates public mechanism instance variables.
+     * Default constructor for HardwareMain. Instantiates public mechanism instance variables.
      */
     public HardwareMain(){
         drivetrain = new Drivetrain();
@@ -57,7 +56,7 @@ public class HardwareMain extends Mechanism {
         flipper = new Flipper();
     }
     /**
-     * Overloaded constructor for HardwareTank. Calls the default constructor and sets the OpMode
+     * Overloaded constructor for HardwareMain. Calls the default constructor and sets the OpMode
      * context for the robot.
      *
      * @param opMode    the LinearOpMode that is currently running
@@ -87,7 +86,7 @@ public class HardwareMain extends Mechanism {
      * Waits for opMode's to start. Can perform actions while waiting.
      */
     public void waitForStart() {
-        while (!opMode.opModeIsActive()) {
+        while (!opMode.isStarted()) {
             opMode.telemetry.addData("Heading:", drivetrain.getHeading());
             opMode.telemetry.update();
         }
@@ -210,7 +209,7 @@ public class HardwareMain extends Mechanism {
      */
     public int scoreAdditionalGlyphsFar(ArrayList<Integer> initialCols, boolean isAllianceRed) {
 
-        // relative coordinates to desired point in glyph put
+        // relative coordinates to desired point in glyph pit
         double x0 = 48 - CRYPTO_COLUMN_WIDTH*initialCols.get(initialCols.size() - 1);
         double y0 = 48;
 
@@ -246,6 +245,8 @@ public class HardwareMain extends Mechanism {
         drivetrain.driveToPos(-Math.sqrt(x1*x1 + y1*y1), 5.0);
         // turn to initial heading
         drivetrain.turn(0, 2.0);
+
+        flipAndAlignGlyph();
 
         return targetCol;
 

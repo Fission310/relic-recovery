@@ -92,10 +92,10 @@ public class Drivetrain extends Mechanism {
         rightBack = hwMap.dcMotor.get(RCConfig.RIGHT_BACK);
 
         // Set motor direction (AndyMark configuration)
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set motor brake behavior
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -158,10 +158,10 @@ public class Drivetrain extends Mechanism {
         double v3 = r * Math.sin(robotAngle) + turn;
         double v4 = r * Math.cos(robotAngle) - turn;
 
-        leftFront.setPower(v2); // v2
-        leftBack.setPower(v4); // v4
-        rightBack.setPower(v3); // v3
-        rightFront.setPower(v1); // v1
+        leftFront.setPower(v3); // v2
+        leftBack.setPower(v1); // v4
+        rightBack.setPower(v2); // v3
+        rightFront.setPower(v4); // v1
     }
 
 
