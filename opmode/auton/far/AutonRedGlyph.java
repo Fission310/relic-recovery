@@ -29,7 +29,7 @@ public class AutonRedGlyph extends LinearOpMode {
         robot.drivetrain.encoderInit();
 
         // Wait until we're told to go
-        waitForStart();
+        robot.waitForStart();
 
         robot.arm.armUp();
         robot.scoreGlyphFar(1, true);

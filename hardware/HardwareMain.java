@@ -175,8 +175,8 @@ public class HardwareMain extends Mechanism {
         relic.turnNeutral();
 
         // drive to position
-        drivetrain.driveToPos(direction * (17 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
-        drivetrain.turn(90, 5.0);
+        drivetrain.driveToPos(-direction * (17 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
+        drivetrain.turn(direction*90, 5.0);
         drivetrain.driveToPos(9, 2.0);
 
         // score glyph
@@ -245,6 +245,53 @@ public class HardwareMain extends Mechanism {
         drivetrain.driveToPos(-Math.sqrt(x1*x1 + y1*y1), 5.0);
         // turn to initial heading
         drivetrain.turn(0, 2.0);
+
+        flipAndAlignGlyph();
+
+        return targetCol;
+
+    }
+
+    /**
+     * Assumes that robot is in the safe zone after flipping and aligning. Finds and scores additional
+     * glyphs into a different column.
+     * @param initialCols
+     * @param isAllianceRed
+     * @return                  column scored in
+     */
+    public int scoreAdditionalGlyphsNear(ArrayList<Integer> initialCols, boolean isAllianceRed) {
+
+        drivetrain.driveToPos(-24, 5.0);
+
+        acquirer.setIntakePower(1);
+        opMode.sleep(2000);
+        acquirer.setIntakePower(0);
+
+        // determine target cryptobox column
+        int targetCol;
+        if (initialCols.indexOf(2) != -1) {
+            targetCol = 2;
+        } else if (initialCols.indexOf(1) != -1) {
+            targetCol = 1;
+        } else if (initialCols.indexOf(0) != -1) {
+            targetCol = 0;
+        } else {
+            initialCols.clear();
+            targetCol = 2;
+        }
+
+        double x1 = CRYPTO_COLUMN_WIDTH*(targetCol-1);
+        double y1 = 24;
+
+        // rotate to desired column
+        drivetrain.turn(Math.toDegrees(Math.atan(x1/y1)), 2.0);
+        opMode.sleep(1500);
+        // drive to the desired point
+        drivetrain.driveToPos(Math.sqrt(x1*x1 + y1*y1), 5.0);
+        opMode.sleep(1500);
+        // turn to initial heading
+        drivetrain.turn(0, 2.0);
+        opMode.sleep(1500);
 
         flipAndAlignGlyph();
 

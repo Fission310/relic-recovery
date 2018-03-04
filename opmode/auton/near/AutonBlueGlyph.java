@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.far;
+package org.firstinspires.ftc.teamcode.opmode.auton.near;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
-import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
+
+import java.util.ArrayList;
 
 /**
  * AutonBlueGlyph is a class containing the following autonomous routine for the BLUE alliance:
@@ -13,11 +14,14 @@ import org.firstinspires.ftc.teamcode.hardware.mecanum.Drivetrain;
  *   <li>Park in safe zone</li>
  * </ol>
  */
-@Autonomous(name="Auton: Blue Glyph Far", group="Auton")
+@Autonomous(name="Auton: Blue Glyph Near", group="Auton")
 public class AutonBlueGlyph extends LinearOpMode {
 
     /* Robot hardware */
     private HardwareMain robot = new HardwareMain(this);
+
+    /* Instance vars */
+    private ArrayList<Integer> cols = new ArrayList<>();
 
     /**
      * Runs the autonomous routine.
@@ -30,10 +34,12 @@ public class AutonBlueGlyph extends LinearOpMode {
         robot.drivetrain.encoderInit();
 
         // Wait until we're told to go
-        waitForStart();
+        robot.waitForStart();
 
         robot.arm.armUp();
-        robot.scoreGlyphFar(1, false);
+        robot.scoreGlyphNear(1, false);
+        cols.add(1);
+        robot.scoreAdditionalGlyphsNear(cols, false);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

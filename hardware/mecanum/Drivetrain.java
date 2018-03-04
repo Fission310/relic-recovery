@@ -270,10 +270,10 @@ public class Drivetrain extends Mechanism {
         runtime.reset();
 
         // Loop until a condition is met
-        while (opMode.opModeIsActive() && Math.abs(getHeading() - targetAngle) > 0.5 && runtime.seconds() < timeoutS) {
+        while (opMode.opModeIsActive() && Math.abs(getError(targetAngle)) > 0.5 && runtime.seconds() < timeoutS) {
 
-            //double velocity = getError(targetAngle) / 180 * 2; // this works
-            double velocity = Math.max(getError(targetAngle) / 180 * 2, 0.25); // to be tested why doesn't this work
+            double velocity = getError(targetAngle) / 180; // this works
+            //double velocity = Math.max(getError(targetAngle) / 180 * 2, 0.25); // to be tested why doesn't this work
 
             // Set motor power according to calculated angle to turn
             leftFront.setPower(velocity);
@@ -305,9 +305,25 @@ public class Drivetrain extends Mechanism {
 
     // Get the difference in the target angle and the current heading
     private double getError(double targetAngle) {
-        return targetAngle - getHeading();
+        if (targetAngle > getHeading()) {
+            if (targetAngle - getHeading() > 180) {
+                return 360 - targetAngle - getHeading();
+            } else {
+                return getHeading() - targetAngle;
+            }
+        } else {
+            if (targetAngle - getHeading() > 180) {
+                return -(360 - targetAngle - getHeading());
+            } else {
+                return targetAngle - getHeading();
+            }
+        }
     }
 
+    /**
+     * Get encoder positions of the drivetrain.
+     * @return      double array with the encoder values of each drivetrain motor
+     */
     public double[] getPositions() {
         double[] positions = new double[4];
         positions[0] = leftFront.getCurrentPosition() / COUNTS_PER_INCH;

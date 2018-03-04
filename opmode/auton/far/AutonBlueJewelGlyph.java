@@ -39,7 +39,7 @@ public class AutonBlueJewelGlyph extends LinearOpMode {
         robot.drivetrain.encoderInit();
 
         // Wait until we're told to go
-        waitForStart();
+        robot.waitForStart();
 
         runtime.reset();
         int key = -1;
