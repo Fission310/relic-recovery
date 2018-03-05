@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton.near;
+package org.firstinspires.ftc.teamcode.opmode.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,15 +7,8 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
 
 import java.util.ArrayList;
 
-/**
- * AutonBlueGlyph is a class containing the following autonomous routine for the RED alliance:
- * <ol>
- *   <li>Score glyph into cryptobox</li>
- *   <li>Park in safe zone</li>
- * </ol>
- */
 @Autonomous(name="Auton: Red Glyph Near", group="Auton")
-public class AutonRedGlyph extends LinearOpMode {
+public class AutonTurnTest extends LinearOpMode {
 
     /* Robot hardware */
     private HardwareMain robot = new HardwareMain(this);
@@ -37,9 +30,24 @@ public class AutonRedGlyph extends LinearOpMode {
         robot.waitForStart();
 
         robot.arm.armUp();
-        robot.scoreGlyphNear(1, true);
-        //cols.add(1);
-        //robot.scoreAdditionalGlyphsNear(cols, true);
+        robot.drivetrain.turn(-90, 5.0);
+        sleep(1000);
+        robot.drivetrain.turn(90, 5.0);
+        sleep(1000);
+        robot.drivetrain.turn(0, 5.0);
+        sleep(1000);
+        robot.drivetrain.turn(180, 5.0);
+        sleep(1000);
+        robot.drivetrain.turn(45, 5.0);
+        sleep(1000);
+        robot.drivetrain.turn(-45, 5.0);
+        sleep(1000);
+        robot.drivetrain.turn(170, 5.0);
+        sleep(1000);
+        robot.drivetrain.turn(-170, 5.0);
+        sleep(1000);
+        robot.drivetrain.turn(20, 5.0);
+        robot.drivetrain.turn(-20, 5.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

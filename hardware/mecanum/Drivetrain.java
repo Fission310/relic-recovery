@@ -265,6 +265,9 @@ public class Drivetrain extends Mechanism {
      */
     public void turn(double targetAngle, double timeoutS) {
 
+        // Normalize input
+        //targetAngle = targetAngle % 360;
+
         // Reset the timeout time
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
@@ -305,17 +308,18 @@ public class Drivetrain extends Mechanism {
 
     // Get the difference in the target angle and the current heading
     private double getError(double targetAngle) {
-        if (targetAngle > getHeading()) {
-            if (targetAngle - getHeading() > 180) {
-                return 360 - targetAngle - getHeading();
+        double heading = getHeading();
+        if (targetAngle > heading) {
+            if (targetAngle - heading > 180) {
+                return 360 - Math.abs(targetAngle) - Math.abs(heading);
             } else {
-                return getHeading() - targetAngle;
+                return heading - targetAngle;
             }
         } else {
-            if (targetAngle - getHeading() > 180) {
-                return -(360 - targetAngle - getHeading());
+            if (targetAngle - heading > 180) {
+                return -(360 - Math.abs(targetAngle) - Math.abs(heading));
             } else {
-                return targetAngle - getHeading();
+                return targetAngle - heading;
             }
         }
     }
