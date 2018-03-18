@@ -91,7 +91,7 @@ public class TeleopMain extends OpMode {
 
         robot.arm.armUp();
         robot.arm.sweeperNeutral();
-        robot.relic.turnNeutral();
+        robot.relic.turnAcq();
 
         runtime.reset();
     }
@@ -157,12 +157,12 @@ public class TeleopMain extends OpMode {
         if (gamepad1.x || gamepad2.x) {
             if (!acquirerDebounce) {
                 acquirerState = !acquirerState;
-                robot.acquirer.setIntakePower(acquirerState ? 1 : 0);
+                robot.acquirer.setIntakePower(acquirerState ? -1 : 0);
                 acquirerDebounce = true;
             }
         } else if (gamepad1.y || gamepad2.y) {
             acquirerState = true;
-            robot.acquirer.setIntakePower(-1);
+            robot.acquirer.setIntakePower(1);
         } else {
             acquirerDebounce = false;
         }

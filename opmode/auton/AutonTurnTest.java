@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareMain;
 
 import java.util.ArrayList;
 
-@Autonomous(name="Auton: Red Glyph Near", group="Auton")
+@Autonomous(name="Test: Turn Test", group="Auton")
 public class AutonTurnTest extends LinearOpMode {
 
     /* Robot hardware */

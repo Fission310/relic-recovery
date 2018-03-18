@@ -149,11 +149,10 @@ public class HardwareMain extends Mechanism {
         relic.turnNeutral();
 
         // drive to position
-        drivetrain.driveToPos(-direction * 24, 5.0);
+        drivetrain.driveToPos(-direction * 21 - 3, 5.0);
         drivetrain.turn(-direction * 90, 10);
-        drivetrain.driveToPos(direction * (3 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
-        drivetrain.turn(0, 10);
-        drivetrain.driveToPos(9, 5.0);
+        drivetrain.driveToPos(-direction * CRYPTO_COLUMN_WIDTH*(targetCol+1), 5.0);
+        drivetrain.turn(-(direction - 1) * 90, 10); // 0 IF BLUE, 180 IF RED
 
         // score glyph
         flipAndAlignGlyph();
@@ -176,8 +175,8 @@ public class HardwareMain extends Mechanism {
 
         // drive to position
         drivetrain.driveToPos(-direction * (17 + CRYPTO_COLUMN_WIDTH*(targetCol+1)), 5.0);
-        drivetrain.turn(direction*90, 5.0);
-        drivetrain.driveToPos(9, 2.0);
+        drivetrain.turn(-90, 5.0);
+        drivetrain.driveToPos(-6, 2.0);
 
         // score glyph
         flipAndAlignGlyph();
@@ -186,18 +185,13 @@ public class HardwareMain extends Mechanism {
 
     // Routine for scoring and aligning the glyph in the cryptobox
     private void flipAndAlignGlyph() {
-        flipper.setLiftPower(-1);
-        opMode.sleep(500);
-        flipper.setLiftPower(0);
         flipper.flipScore();
-        drivetrain.driveToPos(-6, 2.0);
         opMode.sleep(500);
-        flipper.flipNeutral();
-        flipper.setLiftPower(1);
-        opMode.sleep(250);
-        flipper.setLiftPower(0);
+        drivetrain.driveToPos(-6, 2.0);
+        flipper.flipNeutral();;
         drivetrain.driveToPos(6, 2.0);
         drivetrain.driveToPos(-6, 2.0);
+        drivetrain.driveToPos(6, 2.0);
     }
 
     /**

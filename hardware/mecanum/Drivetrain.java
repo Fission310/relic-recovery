@@ -273,9 +273,9 @@ public class Drivetrain extends Mechanism {
         runtime.reset();
 
         // Loop until a condition is met
-        while (opMode.opModeIsActive() && Math.abs(getError(targetAngle)) > 0.5 && runtime.seconds() < timeoutS) {
+        while (opMode.opModeIsActive() && Math.abs(getError(targetAngle)) > 1.5 && runtime.seconds() < timeoutS) {
 
-            double velocity = getError(targetAngle) / 180; // this works
+            double velocity = getError(targetAngle) / 180 + 0.1; // this works
             //double velocity = Math.max(getError(targetAngle) / 180 * 2, 0.25); // to be tested why doesn't this work
 
             // Set motor power according to calculated angle to turn
@@ -313,13 +313,13 @@ public class Drivetrain extends Mechanism {
             if (targetAngle - heading > 180) {
                 return 360 - Math.abs(targetAngle) - Math.abs(heading);
             } else {
-                return heading - targetAngle;
+                return targetAngle - heading;
             }
         } else {
             if (targetAngle - heading > 180) {
                 return -(360 - Math.abs(targetAngle) - Math.abs(heading));
             } else {
-                return targetAngle - heading;
+                return heading - targetAngle;
             }
         }
     }
